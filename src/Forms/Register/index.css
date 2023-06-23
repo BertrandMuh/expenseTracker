@@ -1,0 +1,28 @@
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex {
+  display: flex;
+}
+.flex-column {
+  flex-direction: column;
+}
+
+.form-title {
+  width: 100%;
+  text-align: left;
+}
+
+.grow-1 {
+  flex-grow: 1;
+}
+
+/* .max-width-500px {
+  max-width: 500px;
+} */
+
+.start {
+  align-items: flex-start;
+}

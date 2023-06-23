@@ -9,6 +9,7 @@ const User = require("./models/user");
 const passport = require("passport");
 const session = require("express-session");
 const initializePassport = require("./config/passport-config.js");
+const bcrypt = require("bcrypt");
 
 // const bcrypt = require("bcrypt");
 
@@ -104,6 +105,36 @@ app.get("/user/logout", (req, res) => {
     console.log("logout");
     res.redirect("/"); //Inside a callback… bulletproof!
   });
+});
+
+app.post("/user/sign_up", async (req, res) => {
+  delete req.body.confirmPassword;
+  let hashedPassword = await bcrypt.hash(req.body.password, 10);
+  let user = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: hashedPassword,
+  };
+  try {
+    let check = await User.findOne({ email: user.email });
+    // console.log(check.status);
+    if (check !== null) {
+      res.send("User already exists");
+    } else if (check === null) {
+      try {
+        let response = await User.create(user);
+        console.log(response);
+        res.send("User was created successfuly!");
+      } catch (error) {
+        console.log(error);
+        res.send("An Error has occured.");
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    res.send("An Error has occured.");
+  }
 });
 
 app.get("/*", (req, res) => {
