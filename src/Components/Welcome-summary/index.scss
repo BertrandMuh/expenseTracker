@@ -1,0 +1,24 @@
+#welcomeSummary{
+
+    .summary {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+
+        .summary-charts {
+            display: flex;
+            justify-content: flex-start;
+        }
+    }
+
+}
+
+@media(max-width:500px) {
+    #welcomeSummary {
+        .summary {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+        }
+    }
+}
