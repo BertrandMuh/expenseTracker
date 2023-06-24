@@ -1,0 +1,91 @@
+:root {
+  --max-width-500px: 500px;
+  --width-98-percent: 97%;
+}
+
+#auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+
+  .auth-form-ctn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .register-ctn {
+      background-color: rgb(254, 219, 225);
+      box-shadow: 0 0 5px black;
+      padding: 10px;
+      border-radius: 10px;
+      width: var(--width-98-percent);
+      max-width: var(--max-width-500px);
+
+      .form-title {
+        text-align: center;
+      }
+
+      input {
+        background-color: rgb(243, 233, 248);
+        border: 1px solid gray;
+      }
+
+      input:focus {
+        background-color: rgb(243, 233, 248);
+        border: 1px solid gray;
+      }
+
+      .bi-asterisk {
+        color: red;
+        top: -10px;
+        font-size: 8px;
+      }
+    }
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .login-register {
+    text-align: left;
+    min-width: 200px;
+    max-width: var(--max-width-500px);
+    margin-top: 10px;
+    color: black;
+
+    span {
+      color: blue;
+    }
+
+    span:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+}
+
+
+.center {
+  justify-content: center;
+  align-items: center;
+}
+
+.flex {
+  display: flex;
+}
+
+
+.form-title {
+  width: 100%;
+  text-align: left;
+}
+
+
+.start {
+  align-items: flex-start;
+}
+
+

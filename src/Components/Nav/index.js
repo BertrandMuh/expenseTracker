@@ -3,23 +3,18 @@ import "./index.scss";
 import { logout } from "../../usefull-functions/functions";
 import { AppContext } from "../../context";
 import Logo from "../../images/Money_Management_Logo_3.png";
+import { Link } from "react-router-dom";
 
 const Nav = () => {
   const { user } = useContext(AppContext);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  window.onpopstate = (event) => {
-    console.log(event);
-  };
+  window.onpopstate = (event) => {};
 
   window.addEventListener("resize", () => {
     let currentWindowWidth = window.innerWidth;
     setWindowWidth(currentWindowWidth);
   });
 
-  const changePage = (event) => {
-    let navButton = event.target;
-    console.log(navButton);
-  };
   return (
     <nav className="navbar navbar-expand-lg ">
       <div className="container-fluid">
@@ -47,9 +42,14 @@ const Nav = () => {
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" aria-current="page" href="/">
+              <Link className="nav-link" to="/">
                 Home
-              </a>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/expenses">
+                Expenses
+              </Link>
             </li>
             {/* <li className="nav-item">
               <a className="nav-link" href="/">
