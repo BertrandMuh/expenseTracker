@@ -1,7 +1,9 @@
 import React from "react";
 import "./index.scss";
+import axios from "axios";
 
-const ExpenseForm = () => {
+const ExpenseForm = (props) => {
+  const { personal } = props;
   const expenses = [
     "mortgage",
     "internet",
@@ -101,11 +103,34 @@ const ExpenseForm = () => {
     handleContainerResize.observe(document.querySelector(".header-inputs"));
   }, 2000);
 
-  const handleFormOnSubmit = (event) => {
+  const handleFormOnSubmit = async (event) => {
     event.preventDefault();
-
+    //
     let form = document.getElementById("general-expense");
-    console.log(form);
+    let formInputsCtn = form.querySelectorAll(".expense-input-ctn");
+    let dataArray = Array.from(formInputsCtn).map((child) => {
+      //
+      let dict = {};
+      //
+      let allInputs = Array.from(child.querySelectorAll("input"));
+      //
+      let expenseType = child.querySelector("select");
+      dict[expenseType.name] = expenseType.value;
+      dict["personal"] = personal;
+      //
+      allInputs.forEach((element, idx) => {
+        allInputs[idx] = element.value;
+        dict[element.name] = element.value;
+      });
+
+      return dict;
+    });
+
+    axios("/get/general_category").then((response) => {
+      let data = response.data;
+      console.log(dataArray);
+      console.log(data);
+    });
   };
 
   return (
@@ -133,6 +158,7 @@ const ExpenseForm = () => {
               className="form-control"
               name="expenseType"
               required
+              data-identifier="expense_type"
             >
               <option value="" disabled={true}>
                 --Select a type--
@@ -143,9 +169,10 @@ const ExpenseForm = () => {
             <input
               type="text"
               required
-              name="company"
+              name="companyName"
               className="form-control"
               placeholder="Company name"
+              data-identifier="company"
             />
 
             <input
@@ -153,15 +180,18 @@ const ExpenseForm = () => {
               name="date"
               className="form-control date"
               required
+              data-identifier="date"
             />
 
             <input
               type="number"
               name="amount"
-              step="0.01"
+              step={0.01}
               placeholder="2.50"
               className="form-control amount"
               required
+              data-identifier="amount"
+              min={0.01}
             />
 
             <span className="bi-trash" onClick={deleteARow}></span>

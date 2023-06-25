@@ -4,5 +4,26 @@
     .msg{
         text-align: left;
     }
+    .form-title{
+        font-size: 25px;
+        border: 0;
+        display: flex;
+        justify-content: flex-start;
+        width: max-content;
+        margin-bottom:10px ;
+
+        option{
+            font-size: 15px;
+        }
+    }
+    .form-title:active{
+        border: 0;
+        outline:none;
+    }
+    .form-title:focus{
+        border: 0;
+        outline:none;
+    }
+
 
 }

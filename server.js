@@ -5,6 +5,7 @@ const logger = require("morgan");
 const cors = require("cors");
 // const mongoose = require('mongoose');
 const User = require("./models/user");
+const Category = require("./models/expense_category");
 
 const passport = require("passport");
 const session = require("express-session");
@@ -140,10 +141,13 @@ app.post("/user/sign_up", async (req, res) => {
   }
 });
 
-app.get("/get/general_category", (req, res) => {
-  console.log(req.body);
-  res.send("received");
+app.get("/get/general_category", async (req, res) => {
+  let response = await Category.General.find({});
+
+  res.send(response);
 });
+
+app.post("/add/general_category", async (req, res) => {});
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));

@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "./index.scss";
 import ExpenseForm from "../../Forms/Expenses-form";
 
 const Expenses = () => {
+  const [personal, setPersonal] = useState(false);
+  const [formTitle, setFormTitle] = useState("Group Expense Form");
+
+  const handleOptionChange = (event) => {
+    let element = event.target;
+    setPersonal(element.value === "true" ? true : false);
+    setFormTitle(
+      element.value === "false" ? "Personal Expense Form" : "Group Expense Form"
+    );
+  };
   return (
     <div className="container-fluid expenses-ctn">
       <p className="msg">
@@ -13,7 +23,17 @@ const Expenses = () => {
       </p>
 
       <div className="form-ctn">
-        <ExpenseForm />
+        <div>
+          <select className="form-title" onChange={handleOptionChange}>
+            <option value={false} key="2">
+              Group Expense Form
+            </option>
+            <option value={true} key="1">
+              Personal Expense Form
+            </option>
+          </select>
+          <ExpenseForm personal={personal} />
+        </div>
       </div>
     </div>
   );
