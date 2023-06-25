@@ -4,14 +4,10 @@ import ExpenseForm from "../../Forms/Expenses-form";
 
 const Expenses = () => {
   const [personal, setPersonal] = useState(false);
-  const [formTitle, setFormTitle] = useState("Group Expense Form");
 
   const handleOptionChange = (event) => {
     let element = event.target;
     setPersonal(element.value === "true" ? true : false);
-    setFormTitle(
-      element.value === "false" ? "Personal Expense Form" : "Group Expense Form"
-    );
   };
   return (
     <div className="container-fluid expenses-ctn">
