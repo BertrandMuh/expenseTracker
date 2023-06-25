@@ -61,7 +61,7 @@ const Register = () => {
     }
 
     // Alert the user when the confirm password is not empty and does not match the password value
-    let inputAlert = "0 0 5px solid red";
+    let inputAlert = "0 0 5px red";
     if (name === "confirm_password") {
       if (value !== formData.password) {
         confirmPassword.style.boxShadow = inputAlert;

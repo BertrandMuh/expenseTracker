@@ -48,8 +48,6 @@ const Login = () => {
           value.indexOf("@") < value.length - 1)
       ) {
         email.style.boxShadow = "none";
-
-        console.log(!value.includes("@"));
       } else {
         email.style.boxShadow = "0 0 5px red";
       }

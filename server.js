@@ -108,8 +108,11 @@ app.get("/user/logout", (req, res) => {
 });
 
 app.post("/user/sign_up", async (req, res) => {
+  // delete confirm password
   delete req.body.confirmPassword;
+  // Encrypt the password
   let hashedPassword = await bcrypt.hash(req.body.password, 10);
+  // user object data
   let user = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -117,8 +120,8 @@ app.post("/user/sign_up", async (req, res) => {
     password: hashedPassword,
   };
   try {
+    // check if the user already exists
     let check = await User.findOne({ email: user.email });
-    // console.log(check.status);
     if (check !== null) {
       res.send("User already exists.");
     } else if (check === null) {
@@ -135,6 +138,11 @@ app.post("/user/sign_up", async (req, res) => {
     console.log(error);
     res.send("An Error has occured.");
   }
+});
+
+app.get("/get/general_category", (req, res) => {
+  console.log(req.body);
+  res.send("received");
 });
 
 app.get("/*", (req, res) => {

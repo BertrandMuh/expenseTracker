@@ -1,19 +1,18 @@
 .expense-form {
-    max-width: 1440px;
-    width: max-content;
+    max-width: fit-content;
   
-
+    
     .header-inputs {
         overflow-x: auto;
         max-width: fit-content;
 
         .expense-header {
             display: grid;
-            grid-template-columns: 1fr 150px 0.7fr 20px;
+            grid-template-columns: 1fr 1fr 140px 0.7fr 20px;
             text-align: left;
             font-weight: 600;
-            padding: 5px 10px;
-            min-width: 500px;
+            padding: 5px 20px;
+            min-width: 700px;
             border-bottom: 1px solid gray;
     
             .amount {
@@ -26,12 +25,13 @@
 
     .expense-input-ctn {
         display: grid;
-        grid-template-columns: 1fr 150px 0.7fr 20px;
+        grid-template-columns: 1fr 1fr 140px 0.7fr 20px;
         align-items: center;
         gap: 20px;
         text-align: left;
         padding: 5px 10px;
-        min-width: 500px;
+        padding-right: 0;
+        min-width: 700px;
         border-bottom: 1px solid lightslategray;
 
         input,select{
@@ -58,10 +58,15 @@
         justify-content: space-between;
         align-items: center;
         padding: 10px 10px;
+     
 
         .bi-plus-circle{
             cursor: pointer;
             font-size: 30px;
         }
     }
+}
+
+.form-ctn{
+    max-width: 1440px;
 }
