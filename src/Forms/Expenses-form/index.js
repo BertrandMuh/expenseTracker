@@ -30,11 +30,27 @@ const ExpenseForm = () => {
     let inputRowCtn = document.querySelector(".input-row-ctn");
     let expenseInputCtn = document.querySelector(".expense-input-ctn");
     let cloneRow = expenseInputCtn.cloneNode(true);
+    let trashIcon = cloneRow.querySelector(".bi-trash");
+    trashIcon.addEventListener("click", deleteARow);
     let childElemnts = cloneRow.querySelectorAll("input");
     childElemnts.forEach((child) => {
       child.value = "";
     });
     inputRowCtn.appendChild(cloneRow);
+  };
+
+  const deleteARow = (event) => {
+    // Get the container that holds the rows for the expense's input
+    let inputRowCtn = document.querySelector(".input-row-ctn");
+
+    // Get the parent of the target element
+    let element = event.target;
+    let elementParentNode = element.parentNode;
+
+    // Delete the parent of the target element if we have more than one row
+    if (inputRowCtn.childElementCount > 1) {
+      elementParentNode.parentNode.removeChild(elementParentNode);
+    }
   };
 
   return (
@@ -74,22 +90,20 @@ const ExpenseForm = () => {
               className="form-control amount"
               required
             />
-            <span className="bi-trash"></span>
+            <span className="bi-trash" onClick={deleteARow}></span>
           </div>
         </div>
       </div>
       <div className="btn-ctn">
-        <button
-          type="button"
-          className="btn add-expense"
-          onClick={addExpenseRow}
-        >
-          {/* <span>Add another expense</span> */}
-          <span className="bi-plus-circle"></span>
-        </button>
         <button type="submit" className="btn btn-primary">
           Submit Form
         </button>
+
+        <span
+          className="bi-plus-circle"
+          onClick={addExpenseRow}
+          title="Add a new row"
+        ></span>
       </div>
     </form>
   );

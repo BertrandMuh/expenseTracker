@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const register = async (formData) => {
-  console.log(formData);
   let response = await axios({
     method: "POST",
     url: "/user/sign_up", // route to do signup

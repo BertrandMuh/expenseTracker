@@ -7,6 +7,8 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { setUser } = useContext(AppContext);
+  const [feedback, setFeedback] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const navigate = useNavigate();
 
   const handleFormChange = (event) => {
@@ -15,11 +17,48 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
+
+    let email = document.getElementById("email");
+    let password = document.getElementById("password");
+
+    // Enable login button if all the input fields are not empty
+    if (email.value === "" && password.value === "") {
+      setDisabled(true);
+    }
+    // Make sure the email field meets all the requirements
+    else if (email.value !== "" && password.value !== "") {
+      if (email.value.includes("@")) {
+        setDisabled(false);
+      } else {
+        setDisabled(true);
+      }
+    }
+
+    // Disable the login button if at least one field is empty
+    else {
+      setDisabled(true);
+    }
+
+    // Alert the user when the email field does not meet the requirement
+    if (name === "email") {
+      if (
+        value === "" ||
+        (value.length >= 3 &&
+          value.indexOf("@") > 0 &&
+          value.indexOf("@") < value.length - 1)
+      ) {
+        email.style.boxShadow = "none";
+
+        console.log(!value.includes("@"));
+      } else {
+        email.style.boxShadow = "0 0 5px red";
+      }
+    }
   };
 
   const handleFormOnSubmit = async (event) => {
     event.preventDefault();
-    await login(formData);
+    let response = await login(formData);
     // get session info (user)
     let user = await getUserFromSession();
     setUser(user);
@@ -27,8 +66,8 @@ const Login = () => {
     if (user.firstName) {
       navigate("/");
     } else {
-      document.getElementsByClassName("error")[0].textContent =
-        "Email or password incorrect";
+      document.getElementById("login-feedback").style.color = "red";
+      setFeedback(response.data.message);
     }
   };
 
@@ -66,12 +105,23 @@ const Login = () => {
                 onChange={handleFormChange}
               />
             </div>
-            <button type="submit" className="btn btn-primary">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={disabled}
+            >
               Login
             </button>
           </form>
+          <p className="container-fluid login-register" id="login-feedback">
+            {feedback}
+          </p>
           <p className="login-register container-fluid">
-            Click <Link to="/auth/register">register</Link> to open an account.
+            Click{" "}
+            <Link to="/auth/register" className="text-blue-500">
+              register
+            </Link>{" "}
+            to open an account.
           </p>
         </div>
       </div>

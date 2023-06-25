@@ -1,5 +1,6 @@
 .expense-form {
     max-width: 1440px;
+    width: max-content;
   
 
     .header-inputs {
@@ -9,9 +10,9 @@
         .expense-header {
             display: grid;
             grid-template-columns: 1fr 150px 0.7fr 20px;
-            gap: 10px;
             text-align: left;
-            padding: 5px 20px;
+            font-weight: 600;
+            padding: 5px 10px;
             min-width: 500px;
             border-bottom: 1px solid gray;
     
@@ -27,9 +28,9 @@
         display: grid;
         grid-template-columns: 1fr 150px 0.7fr 20px;
         align-items: center;
-        gap: 10px;
+        gap: 20px;
         text-align: left;
-        padding: 5px 20px;
+        padding: 5px 10px;
         min-width: 500px;
         border-bottom: 1px solid lightslategray;
 
@@ -44,13 +45,23 @@
             text-align: right;
         }
         .bi-trash:hover{
-            cursor: pointer;
             color: red;
+            cursor: pointer;
+        }
+        .bi-trash{
+            border: 0;
+            background: none;
         }
     }
     .btn-ctn{
         display: flex;
-        justify-content: flex-start;
-        padding: 10px 20px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 10px;
+
+        .bi-plus-circle{
+            cursor: pointer;
+            font-size: 30px;
+        }
     }
 }

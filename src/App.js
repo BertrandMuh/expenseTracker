@@ -12,6 +12,7 @@ import Register from "./Forms/Register";
 
 function App() {
   document.cookie = `${document.cookie};SameSite=Lax`;
+
   let navigate = useNavigate();
   const { user, setUser } = useContext(AppContext);
 
@@ -19,7 +20,9 @@ function App() {
     const getUser = async () => {
       let activeUser = await getUserFromSession();
       if (user) {
-        setUser(activeUser);
+        // setUser(activeUser);
+        navigate("/");
+        console.log(user);
       } else {
         navigate("/auth/login");
       }

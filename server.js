@@ -83,7 +83,7 @@ app.put("/user/login", async (req, res, next) => {
     if (err) throw err;
     if (!user) {
       res.json({
-        message: "login failed",
+        message: "Incorrect email or password.",
         user: false,
       });
     } else {
@@ -91,7 +91,7 @@ app.put("/user/login", async (req, res, next) => {
       req.logIn(user, (err) => {
         if (err) throw err;
         res.json({
-          message: "successfully authenticated",
+          message: "successfully authenticated.",
           // remove user
         });
       });
@@ -120,12 +120,12 @@ app.post("/user/sign_up", async (req, res) => {
     let check = await User.findOne({ email: user.email });
     // console.log(check.status);
     if (check !== null) {
-      res.send("User already exists");
+      res.send("User already exists.");
     } else if (check === null) {
       try {
         let response = await User.create(user);
         console.log(response);
-        res.send("User was created successfuly!");
+        res.send("success");
       } catch (error) {
         console.log(error);
         res.send("An Error has occured.");
