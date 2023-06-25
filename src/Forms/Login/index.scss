@@ -7,6 +7,10 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
+  background-image: url("../../images/Money_Management_Logo_3.png");
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover;
 
   .auth-form-ctn {
     width: 100%;
@@ -53,6 +57,7 @@
     max-width: var(--max-width-500px);
     margin-top: 10px;
     color: black;
+    margin: 0;
 
     span {
       color: blue;

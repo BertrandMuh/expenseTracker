@@ -124,10 +124,10 @@ const Register = () => {
               Register
             </button>
           </form>
+          <p className="login-register container-fluid">
+            Click <Link to="/auth/login">login</Link> to access your account.
+          </p>
         </div>
-        <p className="login-register container-fluid">
-          Click <Link to="/auth/login">login</Link> to access your account.
-        </p>
       </div>
     </div>
   );

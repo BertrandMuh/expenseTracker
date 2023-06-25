@@ -1,0 +1,56 @@
+.expense-form {
+    max-width: 1440px;
+  
+
+    .header-inputs {
+        overflow-x: auto;
+        max-width: fit-content;
+
+        .expense-header {
+            display: grid;
+            grid-template-columns: 1fr 150px 0.7fr 20px;
+            gap: 10px;
+            text-align: left;
+            padding: 5px 20px;
+            min-width: 500px;
+            border-bottom: 1px solid gray;
+    
+            .amount {
+                text-align: right;
+            }
+        }
+    }
+    
+    
+
+    .expense-input-ctn {
+        display: grid;
+        grid-template-columns: 1fr 150px 0.7fr 20px;
+        align-items: center;
+        gap: 10px;
+        text-align: left;
+        padding: 5px 20px;
+        min-width: 500px;
+        border-bottom: 1px solid lightslategray;
+
+        input,select{
+            border: 0;
+            border-radius: 0;
+            // border-bottom: 1px solid black;
+            background: linear-gradient(white,rgb(243, 243, 243))
+        }
+
+        .amount{
+            text-align: right;
+        }
+        .bi-trash:hover{
+            cursor: pointer;
+            color: red;
+        }
+    }
+    .btn-ctn{
+        display: flex;
+        justify-content: flex-start;
+        padding: 10px 20px;
+    }
+}

@@ -70,11 +70,10 @@ const Login = () => {
               Login
             </button>
           </form>
+          <p className="login-register container-fluid">
+            Click <Link to="/auth/register">register</Link> to open an account.
+          </p>
         </div>
-
-        <p className="login-register container-fluid">
-          Click <Link to="/auth/register">register</Link> to open an account.
-        </p>
       </div>
     </div>
   );
