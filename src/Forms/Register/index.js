@@ -188,9 +188,7 @@ const Register = () => {
                 required
                 minLength={8}
               />
-              <div id="emailHelp" className="form-text">
-                8 characters mininum.
-              </div>
+              <div className="form-text">8 characters mininum.</div>
             </div>
 
             <div className="mb-3 flex start flex-column">

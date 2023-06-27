@@ -1,28 +1,49 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import "./index.scss";
 import axios from "axios";
+// import AddExpenseType from "../Add-Expsense_type";
+import { AppContext } from "../../context";
 
 const ExpenseForm = (props) => {
-  const { personal } = props;
-  const expenses = [
-    "mortgage",
-    "internet",
-    "gas",
-    "water",
-    "home_security",
-    "solar_panels",
-    "electricity",
-    "waste_management",
-  ];
+  const { isHouseExpense } = props;
 
-  let selectJSX = expenses.sort().map((element, idx) => {
-    let elementValue = element.includes("_")
-      ? element.replace("_", " ")
-      : element;
+  const { houseExpenseType, personalExpenseType } = useContext(AppContext);
 
+  // Show and Hide form to add expense type
+  // for (const item of personalExpense) {
+  //   try {
+  //     axios
+  //       .post("/add/personal_category", {
+  //         name: item,
+  //       })
+  //       .then((response) => console.log(response));
+  //   } catch (error) {
+  //     continue;
+  //   }
+  // }
+
+  // const [addExpenseType, setAddExpenseType] = useState(false);
+
+  // const showOrHideFormToAddExpenseType = (event) => {
+  //   let element = event.target;
+  //   if (element.value === "add") {
+  //     setAddExpenseType(true);
+  //     element.selectedIndex = 0;
+  //   }
+  //   console.log(element.value);
+  // };
+
+  // Options for expense type
+
+  let optionsList =
+    isHouseExpense === "true" || isHouseExpense === true
+      ? [...houseExpenseType]
+      : [...personalExpenseType];
+  let selectOptionsJSX = optionsList.sort().map((element, idx) => {
+    // console.log(element.split("_").join(" "));
     return (
       <option value={element} key={idx}>
-        {elementValue}
+        {element.split("_").join(" ")}
       </option>
     );
   });
@@ -68,19 +89,16 @@ const ExpenseForm = (props) => {
     let container = document.querySelector(".header-inputs");
 
     if (spacedOnTheLeft + widthViewByUser === maxWidthCtn) {
-      container.style.borderRight = 0;
-    } else if (spacedOnTheLeft >= 0) {
-      if (spacedOnTheLeft === 0) {
-        container.style.borderRight = "2px solid gray";
-        container.style.borderLeft = 0;
-      } else if (
-        spacedOnTheLeft >= 0 &&
-        spacedOnTheLeft + widthViewByUser !== maxWidthCtn
-      ) {
-        container.style.borderLeft = "2px solid gray";
-        container.style.borderRight = "2px solid gray";
-      }
       container.style.borderRight = "2px solid gray";
+      container.style.borderLeft = 0;
+    } else if (
+      spacedOnTheLeft > 0 &&
+      spacedOnTheLeft + widthViewByUser < maxWidthCtn
+    ) {
+      container.style.borderLeft = 0;
+      container.style.borderRight = 0;
+    } else if (spacedOnTheLeft === 0) {
+      container.style.borderLeft = "2px solid gray";
     }
   };
 
@@ -92,23 +110,25 @@ const ExpenseForm = (props) => {
       // Check if the width has reached 500px
       if (width <= 680) {
         // Perform some action or update UI when width is 500px or more
-        entry.target.style.borderRight = "2px solid gray";
+        entry.target.style.borderLeft = "2px solid gray";
       } else {
-        entry.target.style.borderRight = "0";
+        entry.target.style.border = "0";
       }
     }
   });
 
   setTimeout(() => {
-    handleContainerResize.observe(document.querySelector(".header-inputs"));
-  }, 2000);
+    if (document.querySelector(".header-inputs")) {
+      handleContainerResize.observe(document.querySelector(".header-inputs"));
+    }
+  }, 1000);
 
   const handleFormOnSubmit = async (event) => {
     event.preventDefault();
     //
     let form = document.getElementById("general-expense");
     let formInputsCtn = form.querySelectorAll(".expense-input-ctn");
-    let dataArray = Array.from(formInputsCtn).map((child) => {
+    let expenseArray = Array.from(formInputsCtn).map((child) => {
       //
       let dict = {};
       //
@@ -116,21 +136,39 @@ const ExpenseForm = (props) => {
       //
       let expenseType = child.querySelector("select");
       dict[expenseType.name] = expenseType.value;
-      dict["personal"] = personal;
-      //
-      allInputs.forEach((element, idx) => {
-        allInputs[idx] = element.value;
-        dict[element.name] = element.value;
+      dict["isHouseExpense"] =
+        isHouseExpense === true || isHouseExpense === "true" ? true : false;
+      //Change the input to appropriate type
+      allInputs.forEach((element) => {
+        let { name, value } = element;
+        // Convert values
+        if (name === "date") {
+          dict[name] = new Date(value);
+        } else if (name === "amount") {
+          dict[name] = parseFloat(value);
+        } else if (name === "companyName") {
+          dict[name] = value;
+        }
       });
 
       return dict;
     });
 
-    axios("/get/general_category").then((response) => {
-      let data = response.data;
-      console.log(dataArray);
-      console.log(data);
-    });
+    for (const expense of expenseArray) {
+      try {
+        axios
+          .post("/add/expense", {
+            data: expense,
+          })
+          .then((response) => {
+            let data = response.data;
+            console.log(data);
+          });
+      } catch (error) {
+        console.log(error);
+        continue;
+      }
+    }
   };
 
   return (
@@ -139,14 +177,17 @@ const ExpenseForm = (props) => {
       id="general-expense"
       onSubmit={handleFormOnSubmit}
     >
-      <div
-        className="header-inputs"
-        onScroll={handleScrolling}
-        // onResize={handleContainerResize}
-      >
+      <div className="header-inputs" onScroll={handleScrolling}>
         <div className="expense-header">
           <span>Expense Type</span>
-          <span>Company Name</span>
+          <span className="name">
+            Name{" "}
+            <i className="bi-info-circle">
+              <span>
+                Name of the company or the name of the item you are paying for.
+              </span>
+            </i>
+          </span>
           <span>Date</span>
           <span className="amount">Amount($)</span>
           <span></span>
@@ -159,11 +200,15 @@ const ExpenseForm = (props) => {
               name="expenseType"
               required
               data-identifier="expense_type"
+              // onChange={showOrHideFormToAddExpenseType}
             >
               <option value="" disabled={true}>
                 --Select a type--
               </option>
-              {selectJSX}
+              {selectOptionsJSX}
+              {/* <option value="add" key="add">
+                add new expense type
+              </option> */}
             </select>
 
             <input
@@ -199,7 +244,7 @@ const ExpenseForm = (props) => {
         </div>
       </div>
       <div className="btn-ctn">
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary submit">
           Submit Form
         </button>
 
@@ -209,6 +254,10 @@ const ExpenseForm = (props) => {
           title="Add a new row"
         ></span>
       </div>
+      {/* <AddExpenseType
+        addExpenseType={addExpenseType}
+        setAddExpenseType={setAddExpenseType}
+      /> */}
     </form>
   );
 };

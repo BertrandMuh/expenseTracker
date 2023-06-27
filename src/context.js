@@ -9,6 +9,8 @@ const AppContextProvider = (props) => {
     email: "",
     password: "",
   });
+  const [houseExpenseType, setHouseExpenseType] = useState([]);
+  const [personalExpenseType, setPersonalExpenseType] = useState([]);
 
   return (
     <AppContext.Provider
@@ -17,6 +19,10 @@ const AppContextProvider = (props) => {
         setUser,
         tempCredential,
         setTempCredential,
+        houseExpenseType,
+        setHouseExpenseType,
+        personalExpenseType,
+        setPersonalExpenseType,
       }}
     >
       {props.children}

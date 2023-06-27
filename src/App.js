@@ -14,20 +14,37 @@ function App() {
   document.cookie = `${document.cookie};SameSite=Lax`;
 
   let navigate = useNavigate();
-  const { user, setUser } = useContext(AppContext);
+  const { user, setUser, setHouseExpenseType, setPersonalExpenseType } =
+    useContext(AppContext);
 
   useEffect(() => {
     const getUser = async () => {
       let activeUser = await getUserFromSession();
-      if (user) {
-        // setUser(activeUser);
+      if (activeUser) {
+        setUser(activeUser);
         navigate("/");
-        console.log(user);
       } else {
         navigate("/auth/login");
       }
     };
+
+    const getExpenseType = async () => {
+      let houseExpense = await axios("/get/house_expense_category");
+      let houseExpenseDate = houseExpense.data;
+      let houseExpenseDataArray = houseExpenseDate.map(
+        (element) => element.name
+      );
+      setHouseExpenseType(houseExpenseDataArray.sort());
+      //
+      let personalExpense = await axios("/get/personal_expense_category");
+      let personalExpenseDate = personalExpense.data;
+      let personalExpenseDataArray = personalExpenseDate.map(
+        (element) => element.name
+      );
+      setPersonalExpenseType(personalExpenseDataArray.sort());
+    };
     getUser();
+    getExpenseType();
   }, []);
 
   return (

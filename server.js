@@ -11,6 +11,7 @@ const passport = require("passport");
 const session = require("express-session");
 const initializePassport = require("./config/passport-config.js");
 const bcrypt = require("bcrypt");
+const { log } = require("console");
 
 // const bcrypt = require("bcrypt");
 
@@ -141,13 +142,60 @@ app.post("/user/sign_up", async (req, res) => {
   }
 });
 
-app.get("/get/general_category", async (req, res) => {
+// get all house expense category
+app.get("/get/house_expense_category", async (req, res) => {
   let response = await Category.General.find({});
 
   res.send(response);
 });
 
-app.post("/add/general_category", async (req, res) => {});
+// create a house expense category
+app.post("/add/house_expense_category", async (req, res) => {
+  let data = req.body;
+  console.log(data);
+  try {
+    await Category.General.create(data);
+    res.send("added");
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+});
+
+// Get all personal expense categories
+app.get("/get/personal_expense_category", async (req, res) => {
+  let response = await Category.Personal.find({});
+
+  res.send(response);
+});
+
+// Create a personal expense category
+app.post("/add/personal_expense_category", async (req, res) => {
+  let data = req.body;
+  console.log(data);
+  try {
+    await Category.Personal.create(data);
+    res.send("added");
+  } catch (error) {
+    console.log(error);
+    res.send(error);
+  }
+});
+
+app.get("/get/expenses", async (req, res) => {
+  let response = await Category.Expense.find({});
+  res.send(response);
+});
+
+app.post("/add/expense", async (req, res) => {
+  const expense = req.body.data;
+  try {
+    let response = await Category.Expense.create(expense);
+    res.send(response);
+  } catch (error) {
+    res.send(error);
+  }
+});
 
 app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));

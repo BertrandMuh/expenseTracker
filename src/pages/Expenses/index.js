@@ -3,12 +3,12 @@ import "./index.scss";
 import ExpenseForm from "../../Forms/Expenses-form";
 
 const Expenses = () => {
-  const [personal, setPersonal] = useState(false);
-
+  const [isHouseExpense, setIsHouseExpense] = useState(true);
   const handleOptionChange = (event) => {
     let element = event.target;
-    setPersonal(element.value === "true" ? true : false);
+    setIsHouseExpense(element.value);
   };
+
   return (
     <div className="container-fluid expenses-ctn">
       <p className="msg">
@@ -21,14 +21,14 @@ const Expenses = () => {
       <div className="form-ctn">
         <div>
           <select className="form-title" onChange={handleOptionChange}>
-            <option value={false} key="2">
-              Group Expense Form
-            </option>
             <option value={true} key="1">
+              Household Expense Form
+            </option>
+            <option value={false} key="2">
               Personal Expense Form
             </option>
           </select>
-          <ExpenseForm personal={personal} />
+          <ExpenseForm isHouseExpense={isHouseExpense} />
         </div>
       </div>
     </div>
