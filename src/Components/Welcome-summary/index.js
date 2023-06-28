@@ -1,7 +1,9 @@
 import React from "react";
 import "./index.scss";
+import axios from "axios";
 
-const Welcome = () => {
+const Welcome = (props) => {
+  const { allExpenses } = props;
   return (
     <div className="section container-fluid" id="welcomeSummary">
       <h1 className="section-title">Dashboard</h1>

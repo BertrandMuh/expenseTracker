@@ -1,11 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "./index.scss";
 import { AppContext } from "../../context";
 import Welcome from "../../Components/Welcome-summary";
 import Breakdown from "../../Components/More-details";
+import axios from "axios";
 
 const Home = () => {
-  const { user } = useContext(AppContext);
+  const { user, allExpenses, setAllExpenses } = useContext(AppContext);
+
+  useEffect(() => {
+    const getExpenses = async () => {
+      let expenses = await axios(`/get/expenses?user=${user._id}`);
+      let expensesData = expenses.data;
+      setAllExpenses(expensesData);
+    };
+    getExpenses();
+  }, []);
+
   return (
     <div className="homepage container-fluid">
       <p className="welcome-msg">
@@ -34,8 +45,8 @@ const Home = () => {
         success story. Wishing you a prosperous and fulfilling financial
         journey!
       </p>
-      <Welcome />
-      <Breakdown />
+      <Welcome allExpenses={allExpenses} />
+      <Breakdown allExpenses={allExpenses} />
     </div>
   );
 };

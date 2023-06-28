@@ -20,7 +20,7 @@
     justify-content: center;
 
     .login-ctn {
-      background-color: rgb(254, 219, 225);
+      background-color: rgb(205, 205, 205);
       box-shadow: 0 0 5px black;
       padding: 10px;
       border-radius: 10px;
@@ -29,13 +29,14 @@
       .form-title {
         text-align: center;
       }
+
       input {
-        background-color: rgb(243, 233, 248);
+        background-color: rgb(238, 238, 238);
         border: 1px solid gray;
       }
 
       input:focus {
-        background-color: rgb(243, 233, 248);
+        background-color: rgb(255, 255, 255);
         border: 1px solid gray;
       }
 
@@ -43,6 +44,20 @@
         color: red;
         top: -10px;
         font-size: 8px;
+      }
+
+      .btn-primary{
+        background: white;
+        color: black;
+        font-weight: bold;
+        font-size: 20px;
+        box-shadow: 0 4px 5px rgb(0, 0, 0);
+        border: 0;
+
+      }
+      .btn-primary:active{
+        background: black;
+        color: white;
       }
     }
   }

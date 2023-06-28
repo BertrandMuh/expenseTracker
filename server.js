@@ -183,8 +183,15 @@ app.post("/add/personal_expense_category", async (req, res) => {
 });
 
 app.get("/get/expenses", async (req, res) => {
-  let response = await Category.Expense.find({});
-  res.send(response);
+  let data = req.query;
+  try {
+    console.log(data);
+    let response = await Category.Expense.find(data);
+    res.send(response);
+  } catch (error) {
+    console.error(error);
+    res.send(error);
+  }
 });
 
 app.post("/add/expense", async (req, res) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import "./index.scss";
 import axios from "axios";
 // import AddExpenseType from "../Add-Expsense_type";
@@ -7,7 +7,8 @@ import { AppContext } from "../../context";
 const ExpenseForm = (props) => {
   const { isHouseExpense } = props;
 
-  const { houseExpenseType, personalExpenseType } = useContext(AppContext);
+  const { houseExpenseType, personalExpenseType, user } =
+    useContext(AppContext);
 
   // Show and Hide form to add expense type
   // for (const item of personalExpense) {
@@ -40,7 +41,6 @@ const ExpenseForm = (props) => {
       ? [...houseExpenseType]
       : [...personalExpenseType];
   let selectOptionsJSX = optionsList.sort().map((element, idx) => {
-    // console.log(element.split("_").join(" "));
     return (
       <option value={element} key={idx}>
         {element.split("_").join(" ")}
@@ -126,11 +126,13 @@ const ExpenseForm = (props) => {
   const handleFormOnSubmit = async (event) => {
     event.preventDefault();
     //
-    let form = document.getElementById("general-expense");
-    let formInputsCtn = form.querySelectorAll(".expense-input-ctn");
+    let inputRowCtn = document.querySelector(".input-row-ctn");
+    let formInputsCtn = inputRowCtn.querySelectorAll(".expense-input-ctn");
     let expenseArray = Array.from(formInputsCtn).map((child) => {
       //
       let dict = {};
+
+      dict["user"] = user._id;
       //
       let allInputs = Array.from(child.querySelectorAll("input"));
       //
@@ -156,19 +158,25 @@ const ExpenseForm = (props) => {
 
     for (const expense of expenseArray) {
       try {
-        axios
-          .post("/add/expense", {
-            data: expense,
-          })
-          .then((response) => {
-            let data = response.data;
-            console.log(data);
-          });
+        axios.post("/add/expense", {
+          data: expense,
+        });
       } catch (error) {
         console.log(error);
         continue;
       }
     }
+
+    // Remove all the input containers but the first
+    while (inputRowCtn.children.length > 1) {
+      inputRowCtn.lastChild.remove();
+    }
+
+    // Reset the form
+    inputRowCtn.querySelectorAll("input").forEach((element) => {
+      element.value = "";
+    });
+    inputRowCtn.querySelector("select").selectedIndex = 0;
   };
 
   return (
