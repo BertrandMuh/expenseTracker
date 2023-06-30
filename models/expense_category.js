@@ -59,7 +59,7 @@ const personalSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Personal = mongoose.model("Personal", personalSchema);
+const Personal = mongoose.model("PersonalExpense", personalSchema);
 
 let Category = {
   General: GeneralCategory,

@@ -11,7 +11,6 @@ const passport = require("passport");
 const session = require("express-session");
 const initializePassport = require("./config/passport-config.js");
 const bcrypt = require("bcrypt");
-// const crypto = require("crypto");
 
 require("dotenv").config();
 require("./config/mongoDatabase");
@@ -47,7 +46,7 @@ initializePassport(
 app.use(
   session({
     secure: true,
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.REACT_APP_SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { originalMaxAge: 300000 },
@@ -110,7 +109,7 @@ app.post("/user/sign_up", async (req, res) => {
   // delete confirm password
   delete req.body.confirmPassword;
   // Encrypt the password
-  let hashedPassword = await bcrypt.hash(req.body.password, 10);
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
   // user object data
   let user = {
     firstName: req.body.firstName,
@@ -183,7 +182,7 @@ app.get("/get/specific_house_expenses", async (req, res) => {
   const month = +data.month;
   const year = +data.year;
   const page = data.page ? data.page : 1;
-  const pageSize = 5;
+  const pageSize = 1;
   const skipCount = pageSize * (page - 1);
 
   try {
@@ -208,6 +207,12 @@ app.get("/get/specific_house_expenses", async (req, res) => {
       },
     });
 
+    //
+    // const expenseSumByType = response.aggregate([
+    //   { $match: { month: month + 1 } },
+    //   { $group: { _id: "$expenseType", totalAmount: { $sum: "$amount" } } },
+    // ]);
+    // console.log(expenseSumByType);
     // Get the number of pages
     const maxPageNumber = totalCount / pageSize;
 
@@ -236,7 +241,7 @@ app.get("/get/specific_personal_expenses", async (req, res) => {
   const month = +data.month;
   const year = +data.year;
   const page = data.page ? data.page : 1;
-  const pageSize = 5;
+  const pageSize = 1;
   const skipCount = pageSize * (page - 1);
 
   try {

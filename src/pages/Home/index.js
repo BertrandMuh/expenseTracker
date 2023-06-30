@@ -6,62 +6,58 @@ import Breakdown from "../../Components/More-details";
 import axios from "axios";
 
 const Home = () => {
-  const {
-    user,
-    houseExpense,
-    setHouseExpense,
-    personalExpense,
-    setPersonalExpense,
-  } = useContext(AppContext);
-  const [houseExpensePeriod, setHouseExpensePeriod] = useState([]);
-  const [personalExpensePeriod, setPersonalExpensePeriod] = useState([]);
+  const { user } = useContext(AppContext);
+
   const [maxPageNumber, setMaxPageNumber] = useState(1);
   const [hasNextPage, setHasNextPage] = useState();
+  const [breakdownExpense, setBreakdownExpense] = useState([]);
+  const [expensePeriod, setExpensePeriod] = useState([]);
   // const []
 
-  const getHouseExpenses = (userId, month, year, page = 1) => {
+  const getAllExpenses = (route, userId, month, year, page = 1) => {
     axios(
-      `/get/specific_house_expenses?user=${userId}&month=${month}&year=${year}&page=${page}`
+      `/get/${route}?user=${userId}&month=${month}&year=${year}&page=${page}`
     ).then((response) => {
-      setHouseExpense(response.data.response);
+      setBreakdownExpense(response.data.response);
       setHasNextPage(response.data.hasNextPage);
       setMaxPageNumber(response.data.maxPageNumber);
     });
   };
-  const getPersonalExpenses = (userId, month, year, page = 1) => {
-    axios(
-      `/get/specific_personal_expenses?user=${userId}&month=${month}&year=${year}&page=${page}`
-    ).then((response) => {
-      setPersonalExpense(response.data.response);
-      setHasNextPage(response.data.hasNextPage);
-      setMaxPageNumber(response.data.maxPageNumber);
-    });
+
+  const getExpenses = (period = "house_expense_period") => {
+    // Get house expenses period and set the house expense
+    axios(`/get/${period}`)
+      .then((response) => {
+        const responseData = response.data;
+        const route =
+          period === "house_expense_period"
+            ? "specific_house_expenses"
+            : "specific_personal_expenses";
+        setExpensePeriod(responseData);
+        return { data: response.data, route: route };
+      })
+      .then((response) => {
+        if (response.data.length > 0) {
+          const month = response.data[0].month - 1;
+          const year = response.data[0].year;
+          getAllExpenses(response.route, user._id, month, year);
+        }
+      });
   };
+  // const getPersonalExpenses = (route,userId, month, year, page = 1) => {
+  //   axios(
+  //     `/get/${route}?user=${userId}&month=${month}&year=${year}&page=${page}`
+  //   ).then((response) => {
+  //     setPersonalExpense(response.data.response);
+  //     setBreakdownExpense(response.data.response);
+
+  //     setHasNextPage(response.data.hasNextPage);
+  //     setMaxPageNumber(response.data.maxPageNumber);
+  //     console.log(response.data);
+  //   });
+  // };
 
   useEffect(() => {
-    const getExpenses = async () => {
-      // Get house expenses period and set the house expense
-      axios("/get/house_expense_period").then(async (response) => {
-        const responseData = response.data;
-        setHouseExpensePeriod(responseData);
-        if (responseData.length > 0) {
-          const month = responseData[0].month - 1;
-          const year = responseData[0].year;
-          getHouseExpenses(user._id, month, year);
-        }
-      });
-
-      // Get personal expenses period and set the personal expense
-      axios("/get/personal_expense_period").then(async (response) => {
-        const responseData = response.data;
-        setPersonalExpensePeriod(responseData);
-        if (responseData.length > 0) {
-          const month = responseData[0].month - 1;
-          const year = responseData[0].year;
-          getPersonalExpenses(user._id, month, year);
-        }
-      });
-    };
     getExpenses();
   }, []);
 
@@ -95,15 +91,14 @@ const Home = () => {
       </p>
       {/* <Welcome houseExpense={houseExpense} personalExpense={personalExpense} /> */}
       <Breakdown
-        houseExpense={houseExpense}
-        personalExpense={personalExpense}
-        houseExpensePeriod={houseExpensePeriod}
-        personalExpensePeriod={personalExpensePeriod}
-        getHouseExpenses={getHouseExpenses}
-        getPersonalExpenses={getPersonalExpenses}
+        breakdownExpense={breakdownExpense}
+        expensePeriod={expensePeriod}
+        getAllExpenses={getAllExpenses}
+        getExpenses={getExpenses}
         hasNextPage={hasNextPage}
         setHasNextPage={setHasNextPage}
         maxPageNumber={maxPageNumber}
+        setMaxPageNumber={setMaxPageNumber}
       />
     </div>
   );

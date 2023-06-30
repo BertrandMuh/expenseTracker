@@ -4,6 +4,8 @@ import axios from "axios";
 // import AddExpenseType from "../Add-Expsense_type";
 import { AppContext } from "../../context";
 
+import { encryptAES } from "../../Encryption/encrypt";
+
 const ExpenseForm = (props) => {
   const { isHouseExpense } = props;
 
@@ -34,7 +36,7 @@ const ExpenseForm = (props) => {
   //   console.log(element.value);
   // };
 
-  // Options for expense type
+  // Options for expense typ
 
   let optionsList =
     isHouseExpense === "true" || isHouseExpense === true
@@ -149,7 +151,7 @@ const ExpenseForm = (props) => {
         } else if (name === "amount") {
           dict[name] = parseFloat(value);
         } else if (name === "companyName") {
-          dict[name] = value;
+          dict[name] = encryptAES(value);
         }
       });
 
