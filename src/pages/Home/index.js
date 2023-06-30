@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./index.scss";
 import { AppContext } from "../../context";
 import Welcome from "../../Components/Welcome-summary";
@@ -6,13 +6,61 @@ import Breakdown from "../../Components/More-details";
 import axios from "axios";
 
 const Home = () => {
-  const { user, allExpenses, setAllExpenses } = useContext(AppContext);
+  const {
+    user,
+    houseExpense,
+    setHouseExpense,
+    personalExpense,
+    setPersonalExpense,
+  } = useContext(AppContext);
+  const [houseExpensePeriod, setHouseExpensePeriod] = useState([]);
+  const [personalExpensePeriod, setPersonalExpensePeriod] = useState([]);
+  const [maxPageNumber, setMaxPageNumber] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState();
+  // const []
+
+  const getHouseExpenses = (userId, month, year, page = 1) => {
+    axios(
+      `/get/specific_house_expenses?user=${userId}&month=${month}&year=${year}&page=${page}`
+    ).then((response) => {
+      setHouseExpense(response.data.response);
+      setHasNextPage(response.data.hasNextPage);
+      setMaxPageNumber(response.data.maxPageNumber);
+    });
+  };
+  const getPersonalExpenses = (userId, month, year, page = 1) => {
+    axios(
+      `/get/specific_personal_expenses?user=${userId}&month=${month}&year=${year}&page=${page}`
+    ).then((response) => {
+      setPersonalExpense(response.data.response);
+      setHasNextPage(response.data.hasNextPage);
+      setMaxPageNumber(response.data.maxPageNumber);
+    });
+  };
 
   useEffect(() => {
     const getExpenses = async () => {
-      let expenses = await axios(`/get/expenses?user=${user._id}`);
-      let expensesData = expenses.data;
-      setAllExpenses(expensesData);
+      // Get house expenses period and set the house expense
+      axios("/get/house_expense_period").then(async (response) => {
+        const responseData = response.data;
+        setHouseExpensePeriod(responseData);
+        if (responseData.length > 0) {
+          const month = responseData[0].month - 1;
+          const year = responseData[0].year;
+          getHouseExpenses(user._id, month, year);
+        }
+      });
+
+      // Get personal expenses period and set the personal expense
+      axios("/get/personal_expense_period").then(async (response) => {
+        const responseData = response.data;
+        setPersonalExpensePeriod(responseData);
+        if (responseData.length > 0) {
+          const month = responseData[0].month - 1;
+          const year = responseData[0].year;
+          getPersonalExpenses(user._id, month, year);
+        }
+      });
     };
     getExpenses();
   }, []);
@@ -45,8 +93,18 @@ const Home = () => {
         success story. Wishing you a prosperous and fulfilling financial
         journey!
       </p>
-      <Welcome allExpenses={allExpenses} />
-      <Breakdown allExpenses={allExpenses} />
+      {/* <Welcome houseExpense={houseExpense} personalExpense={personalExpense} /> */}
+      <Breakdown
+        houseExpense={houseExpense}
+        personalExpense={personalExpense}
+        houseExpensePeriod={houseExpensePeriod}
+        personalExpensePeriod={personalExpensePeriod}
+        getHouseExpenses={getHouseExpenses}
+        getPersonalExpenses={getPersonalExpenses}
+        hasNextPage={hasNextPage}
+        setHasNextPage={setHasNextPage}
+        maxPageNumber={maxPageNumber}
+      />
     </div>
   );
 };

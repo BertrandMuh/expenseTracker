@@ -29,19 +29,34 @@ function App() {
     };
 
     const getExpenseType = async () => {
-      let houseExpense = await axios("/get/house_expense_category");
-      let houseExpenseDate = houseExpense.data;
-      let houseExpenseDataArray = houseExpenseDate.map(
-        (element) => element.name
-      );
-      setHouseExpenseType(houseExpenseDataArray.sort());
-      //
-      let personalExpense = await axios("/get/personal_expense_category");
-      let personalExpenseDate = personalExpense.data;
-      let personalExpenseDataArray = personalExpenseDate.map(
-        (element) => element.name
-      );
-      setPersonalExpenseType(personalExpenseDataArray.sort());
+      // Get house expense category
+      axios("/get/house_expense_category").then((response) => {
+        const responseData = response.data;
+        setHouseExpenseType(
+          responseData.sort((a, b) => {
+            if (a.name < b.name) {
+              return -1;
+            } else if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          })
+        );
+      });
+      // Get personal expense category
+      axios("/get/personal_expense_category").then((response) => {
+        const responseData = response.data;
+        setPersonalExpenseType(
+          responseData.sort((a, b) => {
+            if (a.name < b.name) {
+              return -1;
+            } else if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          })
+        );
+      });
     };
     getUser();
     getExpenseType();

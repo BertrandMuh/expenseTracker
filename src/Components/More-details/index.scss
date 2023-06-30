@@ -1,20 +1,36 @@
 #breakdown {
     padding: 10px;
-    .breakdown-title{
+    .breakdown{
         display: flex;
         justify-content: flex-start;
+        flex-wrap: wrap;
         align-items: center;
         gap: 10px;
+        margin-bottom: 15px;
+        padding: 0;
 
         .section-title{
             width: max-content;
+            height: max-content;
+            margin-bottom: 0;
         }
 
-        select{
-            border: 0;
-            background: lightgray;
-            outline: none;
+        
+
+        div{
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 10px;
+
+            select {
+                border: 0;
+                background: linear-gradient(white,rgb(236, 236, 236));
+                outline: none;
+            }
         }
+
+      
     }
 
 
@@ -32,43 +48,51 @@
             min-width: 365px;
             width: 100%;
 
-            .expense{
-                box-shadow: 0 0 5px rgb(113, 113, 113);
-                padding: 10px;
+            .expenses-ctn{
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
 
-                summary{
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    font-size: 16px;
+                .expense {
+                    box-shadow: 0 0 5px rgb(113, 113, 113);
+                    padding: 10px;
+            
+                    summary {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        font-size: 16px;
+                    }
+            
+                    .more-details {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 5px 10px;
+                        padding-bottom: 0;
+                        color: gray;
+                        font-size: 14px;
+                        border-top: 1px solid lightgray
+                    }
+            
+                    span {
+                        text-transform: capitalize;
+                    }
                 }
-                
-                .more-details{
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 5px 10px;
-                    padding-bottom: 0;
-                    color: gray;
-                    font-size: 14px;
-                    border-top:1px solid lightgray
-                    
-                }
-                span{
-                    text-transform: capitalize;
+            
+                .expense[open] {
+            
+                    summary {
+                        padding-bottom: 3px;
+                    }
                 }
             }
-            .expense[open]{
 
-                summary {
-                   padding-bottom: 3px;
-                }
-            }
+            
         }
 
         .charts{
             background-color: white;
-            box-shadow: 0 0 5px black;
         }
     }
 
@@ -88,6 +112,10 @@
     #breakdown{
         .summary{
             grid-template-columns: 1fr;
+
+            .charts{
+                order: -1;
+            }
         }
     }
 }

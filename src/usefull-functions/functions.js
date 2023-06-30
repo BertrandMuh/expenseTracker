@@ -33,3 +33,21 @@ export const getUserFromSession = async () => {
     return false;
   }
 };
+
+export const returnMonths = () => {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  return monthNames;
+};

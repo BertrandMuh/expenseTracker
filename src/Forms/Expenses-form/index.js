@@ -42,8 +42,8 @@ const ExpenseForm = (props) => {
       : [...personalExpenseType];
   let selectOptionsJSX = optionsList.sort().map((element, idx) => {
     return (
-      <option value={element} key={idx}>
-        {element.split("_").join(" ")}
+      <option value={element._id} key={idx}>
+        {element.name.split("_").join(" ")}
       </option>
     );
   });
@@ -156,14 +156,27 @@ const ExpenseForm = (props) => {
       return dict;
     });
 
-    for (const expense of expenseArray) {
-      try {
-        axios.post("/add/expense", {
-          data: expense,
-        });
-      } catch (error) {
-        console.log(error);
-        continue;
+    if (isHouseExpense === true || isHouseExpense === "true") {
+      for (const expense of expenseArray) {
+        try {
+          axios.post("/add/house_expense", {
+            data: expense,
+          });
+        } catch (error) {
+          console.log(error);
+          continue;
+        }
+      }
+    } else if (isHouseExpense === false || isHouseExpense === "false") {
+      for (const expense of expenseArray) {
+        try {
+          axios.post("/add/personal_expense", {
+            data: expense,
+          });
+        } catch (error) {
+          console.log(error);
+          continue;
+        }
       }
     }
 

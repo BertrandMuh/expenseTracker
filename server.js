@@ -11,9 +11,7 @@ const passport = require("passport");
 const session = require("express-session");
 const initializePassport = require("./config/passport-config.js");
 const bcrypt = require("bcrypt");
-const { log } = require("console");
-
-// const bcrypt = require("bcrypt");
+// const crypto = require("crypto");
 
 require("dotenv").config();
 require("./config/mongoDatabase");
@@ -104,7 +102,6 @@ app.put("/user/login", async (req, res, next) => {
 // logout
 app.get("/user/logout", (req, res) => {
   req.session.destroy(function (err) {
-    console.log("logout");
     res.redirect("/"); //Inside a callback… bulletproof!
   });
 });
@@ -128,9 +125,9 @@ app.post("/user/sign_up", async (req, res) => {
       res.send("User already exists.");
     } else if (check === null) {
       try {
-        let response = await User.create(user);
-        console.log(response);
-        res.send("success");
+        User.create(user).then(() => {
+          res.send("success");
+        });
       } catch (error) {
         console.log(error);
         res.send("An Error has occured.");
@@ -152,7 +149,6 @@ app.get("/get/house_expense_category", async (req, res) => {
 // create a house expense category
 app.post("/add/house_expense_category", async (req, res) => {
   let data = req.body;
-  console.log(data);
   try {
     await Category.General.create(data);
     res.send("added");
@@ -172,7 +168,6 @@ app.get("/get/personal_expense_category", async (req, res) => {
 // Create a personal expense category
 app.post("/add/personal_expense_category", async (req, res) => {
   let data = req.body;
-  console.log(data);
   try {
     await Category.Personal.create(data);
     res.send("added");
@@ -182,26 +177,164 @@ app.post("/add/personal_expense_category", async (req, res) => {
   }
 });
 
-app.get("/get/expenses", async (req, res) => {
-  let data = req.query;
+app.get("/get/specific_house_expenses", async (req, res) => {
+  const data = req.query;
+  const user = data.user;
+  const month = +data.month;
+  const year = +data.year;
+  const page = data.page ? data.page : 1;
+  const pageSize = 5;
+  const skipCount = pageSize * (page - 1);
+
   try {
-    console.log(data);
-    let response = await Category.Expense.find(data);
-    res.send(response);
+    let response = await Category.GeneralExpense.find({
+      user: user,
+      date: {
+        $gte: new Date(year, month, 1),
+        $lt: new Date(year, month + 1, 1),
+      },
+    })
+      .populate("expenseType", "name")
+      .sort({ date: -1 })
+      .skip(skipCount)
+      .limit(pageSize);
+
+    //Get the count per period
+    const totalCount = await Category.GeneralExpense.countDocuments({
+      user: user,
+      date: {
+        $gte: new Date(year, month, 1),
+        $lt: new Date(year, month + 1, 1),
+      },
+    });
+
+    // Get the number of pages
+    const maxPageNumber = totalCount / pageSize;
+
+    const hasNextPage = page < maxPageNumber;
+
+    res.send({ response, maxPageNumber, hasNextPage });
   } catch (error) {
     console.error(error);
     res.send(error);
   }
 });
 
-app.post("/add/expense", async (req, res) => {
+app.post("/add/house_expense", async (req, res) => {
   const expense = req.body.data;
   try {
-    let response = await Category.Expense.create(expense);
+    let response = await Category.GeneralExpense.create(expense);
     res.send(response);
   } catch (error) {
     res.send(error);
   }
+});
+
+app.get("/get/specific_personal_expenses", async (req, res) => {
+  const data = req.query;
+  const user = data.user;
+  const month = +data.month;
+  const year = +data.year;
+  const page = data.page ? data.page : 1;
+  const pageSize = 5;
+  const skipCount = pageSize * (page - 1);
+
+  try {
+    let response = await Category.PersonalExpense.find({
+      user: user,
+      date: {
+        $gte: new Date(year, month, 1),
+        $lt: new Date(year, month + 1, 1),
+      },
+    })
+      .populate("expenseType", "name")
+      .sort({ date: -1 })
+      .skip(skipCount)
+      .limit(pageSize);
+
+    //Get the count per period
+    const totalCount = await Category.PersonalExpense.countDocuments({
+      user: user,
+      date: {
+        $gte: new Date(year, month, 1),
+        $lt: new Date(year, month + 1, 1),
+      },
+    });
+
+    // Get the number of pages
+    const maxPageNumber = totalCount / pageSize;
+
+    const hasNextPage = page < maxPageNumber;
+
+    res.send({ response, maxPageNumber, hasNextPage });
+  } catch (error) {
+    console.error(error);
+    res.send(error);
+  }
+});
+
+app.post("/add/personal_expense", async (req, res) => {
+  const expense = req.body.data;
+  try {
+    let response = await Category.PersonalExpense.create(expense);
+    res.send(response);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+app.get("/get/house_expense_period", async (req, res) => {
+  const result = await Category.GeneralExpense.aggregate([
+    {
+      $group: {
+        _id: {
+          month: { $month: "$date" },
+          year: { $year: "$date" },
+        },
+      },
+    },
+    {
+      $project: {
+        month: "$_id.month",
+        year: "$_id.year",
+      },
+    },
+    {
+      $sort: {
+        year: -1,
+        month: -1,
+      },
+    },
+  ]);
+  // console.log(result);
+  res.send(result);
+});
+
+app.get("/get/personal_expense_period", async (req, res) => {
+  const result = await Category.PersonalExpense.aggregate([
+    {
+      $group: {
+        _id: {
+          month: { $month: "$date" },
+          year: { $year: "$date" },
+        },
+      },
+    },
+    {
+      $project: {
+        month: "$_id.month",
+        year: "$_id.year",
+      },
+    },
+    {
+      $sort: {
+        year: -1,
+        month: -1,
+      },
+    },
+  ]);
+  // console.log(result);
+  res.send(result);
 });
 
 app.get("/*", (req, res) => {
