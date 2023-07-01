@@ -120,7 +120,6 @@ const Breakdown = (props) => {
       return (
         <details key={idx} className="expense flex details">
           <summary>
-            <span className="bi-caret-right-fill"></span>
             <p>
               <span>{companyOrItem}</span>
               <span className="amount">
