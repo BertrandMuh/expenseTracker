@@ -9,6 +9,7 @@ import { getUserFromSession } from "./usefull-functions/functions";
 import Expenses from "./pages/Expenses";
 import Login from "./Forms/Login";
 import Register from "./Forms/Register";
+import Footer from "./Components/Footer";
 
 function App() {
   document.cookie = `${document.cookie};SameSite=Lax`;
@@ -71,6 +72,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/expenses" element={<Expenses />} />
           </Routes>
+          <Footer />
         </>
       ) : (
         <Routes>
