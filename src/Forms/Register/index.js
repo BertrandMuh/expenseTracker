@@ -46,7 +46,8 @@ const Register = () => {
     ) {
       if (
         email.value.length >= 3 &&
-        email.value.indexOf("@") === 1 &&
+        email.value.indexOf("@") >= 1 &&
+        email.value.indexOf("@") !== email.value.length - 1 &&
         password.value.length >= 8 &&
         password.value === confirmPassword.value
       ) {
