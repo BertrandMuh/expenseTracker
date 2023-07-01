@@ -16,6 +16,7 @@ const Expenses = () => {
         user-friendly form. Simply enter your expenses using the provided
         fields, and watch as your financial progress unfolds. Let's start
         logging those expenses and taking control of your finances!
+        <br />
       </p>
 
       <div className="form-ctn">
@@ -28,6 +29,7 @@ const Expenses = () => {
               Personal Expense Form
             </option>
           </select>
+
           <ExpenseForm isHouseExpense={isHouseExpense} />
         </div>
       </div>
