@@ -4,22 +4,21 @@ import { returnMonths } from "../../usefull-functions/functions";
 import { AppContext } from "../../context";
 import Pagination from "../Pagination-buttons";
 import { decryptAES } from "../../Encryption/encrypt";
+import BreakdownSummary from "./breakdownCharts";
 
 const Breakdown = (props) => {
   const {
-    breakdownExpense,
-    houseExpense,
     getExpenses,
-    expensePeriod,
     getAllExpenses,
     hasNextPage,
     setHasNextPage,
     maxPageNumber,
   } = props;
   //
-  const { user } = useContext(AppContext);
+  const { user, expense, expensePeriod } = useContext(AppContext);
   const [isHouseExpense, setIsHouseExpense] = useState(true);
   const [page, setPage] = useState(1);
+
   let selectedEntriesJSX = [];
   //
   const returnMonthAndYear = (value) => {
@@ -48,10 +47,10 @@ const Breakdown = (props) => {
     const month = returnMonthAndYear(period.value).month;
     const year = returnMonthAndYear(period.value).year;
     let requestedPage;
-    let route;
+    let type;
     //
     if (isHouseExpense) {
-      route = "specific_house_expenses";
+      type = "house";
       if (name === "next") {
         requestedPage = page + 1;
         //
@@ -76,7 +75,7 @@ const Breakdown = (props) => {
         //
       }
     } else {
-      route = "specific_personal_expenses";
+      type = "personal";
       if (name === "next") {
         requestedPage = page + 1;
         //
@@ -101,7 +100,7 @@ const Breakdown = (props) => {
         //
       }
     }
-    getAllExpenses(route, user._id, month, year, requestedPage);
+    getAllExpenses(type, user._id, month, year, requestedPage);
   };
 
   // Get the right expense to display in the browser
@@ -136,7 +135,7 @@ const Breakdown = (props) => {
     return selectedEntriesJSX;
   };
 
-  let allEntries = breakdownExpense ? [...breakdownExpense] : [];
+  let allEntries = expense ? [...expense] : [];
   selectedEntriesJSX = returnJSX(allEntries);
 
   // Get The right period
@@ -155,35 +154,38 @@ const Breakdown = (props) => {
 
   // Request the appropriate expenses based on the month and year
   const handleOptionChange = (event) => {
+    setPage(1);
+    setHasNextPage(false);
+
     let { value, name } = event.target;
     let periodSelected = document.getElementById("month");
     let period;
 
     let year;
     let month;
-    let route;
+    let type;
 
     if (name === "house-personal") {
       if (value === "true" || value === true) {
         setIsHouseExpense(true);
-        period = "house_expense_period";
+        period = "house";
       } else if (value === "false" || value === false) {
         setIsHouseExpense(false);
-        period = "personal_expense_period";
+        period = "personal";
       }
       getExpenses(period);
-      periodSelected.selectedIndex = 0;
+      if (periodSelected) {
+        periodSelected.selectedIndex = 0;
+      }
     } else if (name === "month") {
-      console.log(hasNextPage);
       month = returnMonthAndYear(periodSelected.value).month;
       year = returnMonthAndYear(periodSelected.value).year;
-      console.log(month, year);
       if (isHouseExpense) {
-        route = "specific_house_expenses";
-        getAllExpenses(route, user._id, month, year);
+        type = "house";
+        getAllExpenses(type, user._id, month, year);
       } else {
-        route = "specific_personal_expenses";
-        getAllExpenses(route, user._id, month, year);
+        type = "personal";
+        getAllExpenses(type, user._id, month, year);
       }
     }
   };
@@ -211,7 +213,7 @@ const Breakdown = (props) => {
         </div>
       </div>
       <div className="summary">
-        <div className="numbers">
+        <div className="numbers container-fluid">
           <div className="expenses-ctn">{selectedEntriesJSX}</div>
           <Pagination
             changePage={changePage}
@@ -219,7 +221,9 @@ const Breakdown = (props) => {
             hasNextPage={hasNextPage}
           />
         </div>
-        <div className="charts">Chart here</div>
+        <div className="charts container-fluid">
+          <BreakdownSummary isHouseExpense={isHouseExpense} />
+        </div>
       </div>
     </div>
   );

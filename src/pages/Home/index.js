@@ -6,56 +6,49 @@ import Breakdown from "../../Components/More-details";
 import axios from "axios";
 
 const Home = () => {
-  const { user } = useContext(AppContext);
+  const { user, setExpense, setExpensePeriod, setBreakdownOverview } =
+    useContext(AppContext);
 
   const [maxPageNumber, setMaxPageNumber] = useState(1);
   const [hasNextPage, setHasNextPage] = useState();
-  const [breakdownExpense, setBreakdownExpense] = useState([]);
-  const [expensePeriod, setExpensePeriod] = useState([]);
-  // const []
 
-  const getAllExpenses = (route, userId, month, year, page = 1) => {
+  const getAllExpenses = (type, userId, month, year, page = 1) => {
     axios(
-      `/get/${route}?user=${userId}&month=${month}&year=${year}&page=${page}`
-    ).then((response) => {
-      setBreakdownExpense(response.data.response);
-      setHasNextPage(response.data.hasNextPage);
-      setMaxPageNumber(response.data.maxPageNumber);
-    });
+      `/get/specific_expenses?user=${userId}&month=${month}&year=${year}&page=${page}&type=${type}`
+    )
+      .then((response) => {
+        setExpense(response.data.response);
+        setHasNextPage(response.data.hasNextPage);
+        setMaxPageNumber(response.data.maxPageNumber);
+      })
+      .then(() => {
+        axios(
+          `/get/sum_by_category?user=${userId}&month=${month}&year=${year}&page=${page}&type=${type}`
+        ).then((response) => {
+          setBreakdownOverview(response.data);
+        });
+      });
   };
 
-  const getExpenses = (period = "house_expense_period") => {
+  const getExpenses = (type = "house") => {
     // Get house expenses period and set the house expense
-    axios(`/get/${period}`)
+    axios(`/get/expense_period?period=${type}&user=${user._id}`)
       .then((response) => {
         const responseData = response.data;
-        const route =
-          period === "house_expense_period"
-            ? "specific_house_expenses"
-            : "specific_personal_expenses";
+
         setExpensePeriod(responseData);
-        return { data: response.data, route: route };
+        return { data: response.data, type: type };
       })
       .then((response) => {
         if (response.data.length > 0) {
           const month = response.data[0].month - 1;
           const year = response.data[0].year;
-          getAllExpenses(response.route, user._id, month, year);
+          getAllExpenses(response.type, user._id, month, year);
+        } else {
+          getAllExpenses(response.type, user._id, 1, 2023);
         }
       });
   };
-  // const getPersonalExpenses = (route,userId, month, year, page = 1) => {
-  //   axios(
-  //     `/get/${route}?user=${userId}&month=${month}&year=${year}&page=${page}`
-  //   ).then((response) => {
-  //     setPersonalExpense(response.data.response);
-  //     setBreakdownExpense(response.data.response);
-
-  //     setHasNextPage(response.data.hasNextPage);
-  //     setMaxPageNumber(response.data.maxPageNumber);
-  //     console.log(response.data);
-  //   });
-  // };
 
   useEffect(() => {
     getExpenses();
@@ -91,8 +84,6 @@ const Home = () => {
       </p>
       {/* <Welcome houseExpense={houseExpense} personalExpense={personalExpense} /> */}
       <Breakdown
-        breakdownExpense={breakdownExpense}
-        expensePeriod={expensePeriod}
         getAllExpenses={getAllExpenses}
         getExpenses={getExpenses}
         hasNextPage={hasNextPage}

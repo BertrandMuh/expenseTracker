@@ -11,8 +11,10 @@ const AppContextProvider = (props) => {
   });
   const [houseExpenseType, setHouseExpenseType] = useState([]);
   const [personalExpenseType, setPersonalExpenseType] = useState([]);
-  const [personalExpense, setPersonalExpense] = useState([]);
-  const [houseExpense, setHouseExpense] = useState([]);
+  const [expense, setExpense] = useState([]);
+  const [expensePeriod, setExpensePeriod] = useState([]);
+  const [currentPeriod, setCurrentPeriod] = useState({ month: "", year: "" });
+  const [breakdownOverview, setBreakdownOverview]=useState([])
 
   return (
     <AppContext.Provider
@@ -25,10 +27,14 @@ const AppContextProvider = (props) => {
         setHouseExpenseType,
         personalExpenseType,
         setPersonalExpenseType,
-        personalExpense,
-        setPersonalExpense,
-        houseExpense,
-        setHouseExpense,
+        expense,
+        setExpense,
+        expensePeriod,
+        setExpensePeriod,
+        currentPeriod,
+        setCurrentPeriod,
+        breakdownOverview,
+        setBreakdownOverview,
       }}
     >
       {props.children}

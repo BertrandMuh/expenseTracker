@@ -11,6 +11,7 @@ const passport = require("passport");
 const session = require("express-session");
 const initializePassport = require("./config/passport-config.js");
 const bcrypt = require("bcrypt");
+const { default: mongoose } = require("mongoose");
 
 require("dotenv").config();
 require("./config/mongoDatabase");
@@ -176,30 +177,36 @@ app.post("/add/personal_expense_category", async (req, res) => {
   }
 });
 
-app.get("/get/specific_house_expenses", async (req, res) => {
+app.get("/get/specific_expenses", async (req, res) => {
   const data = req.query;
+  const type = data.type;
   const user = data.user;
   const month = +data.month;
   const year = +data.year;
   const page = data.page ? data.page : 1;
-  const pageSize = 1;
+  const pageSize = 5;
   const skipCount = pageSize * (page - 1);
+  const collection =
+    type === "house" ? Category.GeneralExpense : Category.PersonalExpense;
 
   try {
-    let response = await Category.GeneralExpense.find({
-      user: user,
-      date: {
-        $gte: new Date(year, month, 1),
-        $lt: new Date(year, month + 1, 1),
-      },
-    })
+    console.log(user, type);
+
+    let response = await collection
+      .find({
+        user: user,
+        date: {
+          $gte: new Date(year, month, 1),
+          $lt: new Date(year, month + 1, 1),
+        },
+      })
       .populate("expenseType", "name")
       .sort({ date: -1 })
       .skip(skipCount)
       .limit(pageSize);
 
     //Get the count per period
-    const totalCount = await Category.GeneralExpense.countDocuments({
+    const totalCount = await collection.countDocuments({
       user: user,
       date: {
         $gte: new Date(year, month, 1),
@@ -207,12 +214,6 @@ app.get("/get/specific_house_expenses", async (req, res) => {
       },
     });
 
-    //
-    // const expenseSumByType = response.aggregate([
-    //   { $match: { month: month + 1 } },
-    //   { $group: { _id: "$expenseType", totalAmount: { $sum: "$amount" } } },
-    // ]);
-    // console.log(expenseSumByType);
     // Get the number of pages
     const maxPageNumber = totalCount / pageSize;
 
@@ -231,6 +232,67 @@ app.post("/add/house_expense", async (req, res) => {
     let response = await Category.GeneralExpense.create(expense);
     res.send(response);
   } catch (error) {
+    res.send(error);
+  }
+});
+
+app.get("/get/sum_by_category", async (req, res) => {
+  const data = req.query;
+  const user = data.user;
+  const type = data.type;
+  const month = +data.month;
+  const year = +data.year;
+  const Collection =
+    type === "house" ? Category.GeneralExpense : Category.PersonalExpense;
+  const RefCategogry =
+    type === "house" ? "generalcategories" : "personalcategories";
+  try {
+    const expenseSumByType = await Collection.aggregate([
+      {
+        $lookup: {
+          from: RefCategogry, // Replace "expenseTypes" with the actual collection name containing expense types
+          localField: "expenseType", // field reference in the current collection
+          foreignField: "_id", // type of foreign field
+          as: "expenseTypeInfo", // They was to group it
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              { $arrayElemAt: ["$expenseTypeInfo", 0] },
+              "$$ROOT",
+            ],
+          },
+        },
+      },
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(user),
+          date: {
+            $gte: new Date(year, month, 1),
+            $lt: new Date(year, month + 1, 1),
+          },
+        },
+      },
+      {
+        // Group the items
+        $group: {
+          _id: "$expenseType",
+          name: { $first: "$name" },
+          totalAmount: { $sum: "$amount" },
+          data: { $push: "$$ROOT" },
+        },
+      },
+      {
+        $sort: {
+          totalAmount: -1,
+        },
+      },
+    ]);
+    res.send(expenseSumByType);
+  } catch (error) {
+    console.error(error);
     res.send(error);
   }
 });
@@ -288,8 +350,18 @@ app.post("/add/personal_expense", async (req, res) => {
   }
 });
 
-app.get("/get/house_expense_period", async (req, res) => {
-  const result = await Category.GeneralExpense.aggregate([
+app.get("/get/expense_period/", async (req, res) => {
+  const user = req.query.user;
+  const Collection =
+    req.query.period === "house"
+      ? Category.GeneralExpense
+      : Category.PersonalExpense;
+  const result = await Collection.aggregate([
+    {
+      $match: {
+        user: new mongoose.Types.ObjectId(user), // Match expenses for the specific user ID
+      },
+    },
     {
       $group: {
         _id: {
@@ -311,34 +383,6 @@ app.get("/get/house_expense_period", async (req, res) => {
       },
     },
   ]);
-  // console.log(result);
-  res.send(result);
-});
-
-app.get("/get/personal_expense_period", async (req, res) => {
-  const result = await Category.PersonalExpense.aggregate([
-    {
-      $group: {
-        _id: {
-          month: { $month: "$date" },
-          year: { $year: "$date" },
-        },
-      },
-    },
-    {
-      $project: {
-        month: "$_id.month",
-        year: "$_id.year",
-      },
-    },
-    {
-      $sort: {
-        year: -1,
-        month: -1,
-      },
-    },
-  ]);
-  // console.log(result);
   res.send(result);
 });
 
