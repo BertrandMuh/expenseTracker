@@ -14,14 +14,20 @@ const BreakdownSummary = (props) => {
       </div>
     );
   });
-
+  console.log(breakdownOverview.length);
   return (
-    <div className="breakdown-overview ">
-      <h2 className="title">Summary</h2>
-      <span className="type header">Type</span>
-      <span className="amount header">Amount</span>
-      <div className="details">{overviewJSX}</div>
-    </div>
+    <>
+      {breakdownOverview.length > 0 ? (
+        <div className="breakdown-overview ">
+          <h2 className="title">Summary</h2>
+          <span className="type header">Type</span>
+          <span className="amount header">Amount</span>
+          <div className="details">{overviewJSX}</div>
+        </div>
+      ) : (
+        ""
+      )}
+    </>
   );
 };
 
