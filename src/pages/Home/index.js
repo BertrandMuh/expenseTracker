@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "./index.scss";
 import { AppContext } from "../../context";
 import Welcome from "../../Components/Welcome-summary";
-import Breakdown from "../../Components/More-details";
+import Breakdown from "../../Components/More-details/breakdownCharts/breakdown";
 import axios from "axios";
 
 const Home = () => {
@@ -65,7 +65,7 @@ const Home = () => {
         charge of your financial well-being. Our comprehensive expense tracker
         website is designed to empower you with the tools and insights needed to
         make informed decisions about your money. Simply log your transactions,
-        categorize them, set budgetss for different categories, and add helpful
+        categorize them, set budgets for different categories, and add helpful
         tags to keep your financial records organized.
         <br />
         <br />

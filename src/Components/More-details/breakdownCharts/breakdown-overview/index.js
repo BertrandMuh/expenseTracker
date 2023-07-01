@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AppContext } from "../../../context";
+import { AppContext } from "../../../../context";
 import "./index.scss";
 
 const BreakdownSummary = (props) => {
@@ -10,24 +10,21 @@ const BreakdownSummary = (props) => {
     return (
       <div key={idx}>
         <span className="type">{name}</span>
-        <span className="amount">{amount}</span>
+        <div>
+          <span className="bi-currency-dollar"></span>
+          <span className="amount">{amount}</span>
+        </div>
       </div>
     );
   });
   console.log(breakdownOverview.length);
   return (
-    <>
-      {breakdownOverview.length > 0 ? (
-        <div className="breakdown-overview ">
-          <h2 className="title">Summary</h2>
-          <span className="type header">Type</span>
-          <span className="amount header">Amount</span>
-          <div className="details">{overviewJSX}</div>
-        </div>
-      ) : (
-        ""
-      )}
-    </>
+    <div className="breakdown-overview ">
+      <h2 className="title">Summary</h2>
+      <span className="type header">Type</span>
+      <span className="amount header">Amount</span>
+      <div className="details">{overviewJSX}</div>
+    </div>
   );
 };
 

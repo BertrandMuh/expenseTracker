@@ -21,14 +21,17 @@ const Expenses = () => {
 
       <div className="form-ctn">
         <div>
-          <select className="form-title" onChange={handleOptionChange}>
-            <option value={true} key="1">
-              Household Expense Form
-            </option>
-            <option value={false} key="2">
-              Personal Expense Form
-            </option>
-          </select>
+          <div className="select">
+            <select className="form-title" onChange={handleOptionChange}>
+              <option value={true} key="1">
+                Household Expense Form
+              </option>
+              <option value={false} key="2">
+                Personal Expense Form
+              </option>
+            </select>
+            <span className="bi-caret-down-fill"></span>
+          </div>
 
           <ExpenseForm isHouseExpense={isHouseExpense} />
         </div>

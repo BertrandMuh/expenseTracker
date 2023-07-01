@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./index.scss";
-import { returnMonths } from "../../usefull-functions/functions";
-import { AppContext } from "../../context";
-import Pagination from "../Pagination-buttons";
-import { decryptAES } from "../../Encryption/encrypt";
-import BreakdownSummary from "./breakdownCharts";
+import { returnMonths } from "../../../../usefull-functions/functions";
+import { AppContext } from "../../../../context";
+import Pagination from "../../../Pagination-buttons";
+import { decryptAES } from "../../../../Encryption/encrypt";
+import BreakdownSummary from "../breakdown-overview";
 
 const Breakdown = (props) => {
   const {
@@ -15,7 +15,8 @@ const Breakdown = (props) => {
     maxPageNumber,
   } = props;
   //
-  const { user, expense, expensePeriod } = useContext(AppContext);
+  const { user, expense, expensePeriod, breakdownOverview } =
+    useContext(AppContext);
   const [isHouseExpense, setIsHouseExpense] = useState(true);
   const [page, setPage] = useState(1);
 
@@ -119,11 +120,14 @@ const Breakdown = (props) => {
       return (
         <details key={idx} className="expense flex details">
           <summary>
-            <span>{companyOrItem}</span>
-            <span>
-              <strong>$ </strong>
-              <strong> {amount} </strong>
-            </span>
+            <span className="bi-caret-right-fill"></span>
+            <p>
+              <span>{companyOrItem}</span>
+              <span className="amount">
+                <span className="bi-currency-dollar"></span>
+                <strong> {amount} </strong>
+              </span>
+            </p>
           </summary>
           <div className="more-details">
             <span>{expenseType}</span>
@@ -195,18 +199,28 @@ const Breakdown = (props) => {
       <div className="breakdown">
         <h1 className="section-title">Monthly Break down</h1>
         <div>
-          <select onChange={handleOptionChange} name="house-personal">
-            <option value={true} key="1">
-              House Expenses
-            </option>
-            <option value={false} key="2">
-              Personal Expenses
-            </option>
-          </select>
-          {expensePeriod.length > 0 ? (
-            <select onChange={handleOptionChange} name="month" id="month">
-              {monthOptionsJSX}
+          <div className="select">
+            <select
+              onChange={handleOptionChange}
+              name="house-personal"
+              className="bi-caret-down-fill"
+            >
+              <option value={true} key="1">
+                House Expenses
+              </option>
+              <option value={false} key="2">
+                Personal Expenses
+              </option>
             </select>
+          </div>
+
+          {expensePeriod.length > 0 ? (
+            <div className="select">
+              <select onChange={handleOptionChange} name="month" id="month">
+                {monthOptionsJSX}
+              </select>
+              {/* <span className="bi-caret-down-fill"></span> */}
+            </div>
           ) : (
             ""
           )}
@@ -221,9 +235,13 @@ const Breakdown = (props) => {
             hasNextPage={hasNextPage}
           />
         </div>
-        <div className="charts container-fluid">
-          <BreakdownSummary isHouseExpense={isHouseExpense} />
-        </div>
+        {breakdownOverview.length > 0 ? (
+          <div className="charts">
+            <BreakdownSummary isHouseExpense={isHouseExpense} />
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

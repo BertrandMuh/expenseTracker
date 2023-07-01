@@ -33,14 +33,28 @@
         
         div{
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 0.5fr;
+            padding: 2px 5px;
 
             .type{
                 text-align: left;
             }
 
+            div{
+                margin-right: 0;
+                display: grid;
+                grid-template-columns: 0.1fr 1fr;
+                text-align: right;
+            }
+
             .amount{
                 font-weight: 500;
+                text-align: right;
+            }
+
+            .bi-currency-dollar{
+                text-align: right;
+                padding-left: 10px;
             }
         }
 
@@ -50,9 +64,7 @@
 
        
     }
-    
 
-    
 }
 
 @media(max-width:796px) {
