@@ -30,7 +30,9 @@ const Expenses = () => {
                 Personal Expense Form
               </option>
             </select>
-            <span className="bi-caret-down-fill"></span>
+            <i className="bi-info-circle">
+              <span>Click on the form title to select another form.</span>
+            </i>
           </div>
 
           <ExpenseForm isHouseExpense={isHouseExpense} />

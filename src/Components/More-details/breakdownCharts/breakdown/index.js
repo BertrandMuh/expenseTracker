@@ -223,10 +223,16 @@ const Breakdown = (props) => {
           ) : (
             ""
           )}
+          <i className="bi-info-circle">
+            <span>
+              Click on either the type of expenses or time period to select more
+              option in the dropdown menu.
+            </span>
+          </i>
         </div>
       </div>
       <div className="summary">
-        <div className="numbers container-fluid">
+        <div className="numbers">
           <div className="expenses-ctn">{selectedEntriesJSX}</div>
           <Pagination
             changePage={changePage}
