@@ -29,8 +29,10 @@
             align-items: center;
 
             span{
-                margin-left:180px;
+                margin-left:150px;
                 margin-top: 25px;
+                background: rgb(151, 151, 151);
+                z-index: 5;
             }
         }
 
