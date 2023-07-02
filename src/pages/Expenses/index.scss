@@ -4,66 +4,70 @@
     .msg{
         text-align: left;
     }
-
-    .select{
-        display: flex;
-        align-items: center;
-        background: linear-gradient(white, rgb(219, 219, 219));
-        width: max-content;
-        gap: 20px;
-        padding: 0 5px;
-        position: relative;
-
-
-
-
-        .bi-plus-circle {
-            cursor: pointer;
-            font-size: 30px;
-        }
-            
-        .bi-info-circle{
-            font-size: 20px;
-            height: 100%;
+    .form{
+        width: 100%;
+        
+        .select {
             display: flex;
             align-items: center;
-
-            span{
-                margin-left:150px;
-                margin-top: 25px;
-                background: rgb(151, 151, 151);
-                z-index: 5;
-            }
-        }
-
-        .form-title {
-            color: rgb(0, 0, 0)!important;
-            font-size: 25px;
-            border: 0;
-            display: flex;
-            justify-content: flex-start;
+            background: linear-gradient(white, rgb(214, 214, 214));
             width: max-content;
-            padding: 5px 2px;
-            background: linear-gradient(white, rgb(219, 219, 219));
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+            gap: 20px;
+            padding: 0 5px;
+            position: relative;
     
-            option {
-                font-size: 15px;
+    
+            .bi-plus-circle {
+                cursor: pointer;
+                font-size: 30px;
+            }
+    
+            .bi-info-circle {
+                font-size: 20px;
+                height: 100%;
+                display: flex;
+                align-items: center;
+    
+                span {
+                    margin-left: 150px;
+                    margin-top: 25px;
+                    background: rgb(151, 151, 151);
+                    z-index: 5;
+                }
+            }
+    
+            .form-title {
+                color: rgb(0, 0, 0) !important;
+                font-size: 25px;
+                border: 0;
+                display: flex;
+                justify-content: flex-start;
+                width: max-content;
+                padding: 5px 2px;
+                background: linear-gradient(white, rgb(219, 219, 219));
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+    
+                option {
+                    font-size: 15px;
+                }
+            }
+    
+            .form-title:active {
+                border: 0;
+                outline: none;
+            }
+    
+            .form-title:focus {
+                border: 0;
+                outline: none;
             }
         }
-    
-        .form-title:active {
-            border: 0;
-            outline: none;
-        }
-    
-        .form-title:focus {
-            border: 0;
-            outline: none;
-        }
+
     }
+
+    
     
 
 

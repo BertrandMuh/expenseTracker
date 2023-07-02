@@ -68,10 +68,12 @@ function App() {
       {user ? (
         <>
           <Nav />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/expenses" element={<Expenses />} />
-          </Routes>
+          <div className="content-div">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/expenses" element={<Expenses />} />
+            </Routes>
+          </div>
           <Footer />
         </>
       ) : (

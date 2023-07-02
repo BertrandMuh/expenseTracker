@@ -20,7 +20,7 @@ const Expenses = () => {
       </p>
 
       <div className="form-ctn">
-        <div>
+        <div className="form">
           <div className="select">
             <select className="form-title" onChange={handleOptionChange}>
               <option value={true} key="1">

@@ -1,8 +1,13 @@
 .App {
   text-align: center;
   min-height: 100vh;
-  display: grid;
-  grid-template-rows: max-content 1fr max-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content-div {
+  flex-grow: 1;
 }
 * {
   margin: 0;

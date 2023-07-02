@@ -223,15 +223,11 @@ const ExpenseForm = (props) => {
               name="expenseType"
               required
               data-identifier="expense_type"
-              // onChange={showOrHideFormToAddExpenseType}
             >
               <option value="" disabled={true}>
                 --Select a type--
               </option>
               {selectOptionsJSX}
-              {/* <option value="add" key="add">
-                add new expense type
-              </option> */}
             </select>
 
             <input
