@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./index.scss";
-import { returnMonths } from "../../../../usefull-functions/functions";
-import { AppContext } from "../../../../context";
-import Pagination from "../../../Pagination-buttons";
-import { decryptAES } from "../../../../Encryption/encrypt";
+import { returnMonths } from "../../../usefull-functions/functions";
+import { AppContext } from "../../../context";
+import Pagination from "../../Pagination-buttons";
+import { decryptAES } from "../../../Encryption/encrypt";
 import BreakdownSummary from "../breakdown-overview";
 
 const Breakdown = (props) => {
@@ -111,7 +111,12 @@ const Breakdown = (props) => {
       // Replace Underscore with a space
       const expenseType = element.expenseType.name.split("_").join(" ");
       // Convert the time
-      const date = new Date(element.date).toLocaleDateString();
+      const date = new Date(element.date).getUTCDate();
+      const monthInteger = new Date(element.date).getUTCMonth();
+      console.log(monthInteger);
+      const month = returnMonths()[+monthInteger];
+      console.log(month);
+      const year = new Date(element.date).getUTCFullYear();
       // Set the amount to 2 decimal place
       const amount = element.amount.toFixed(2);
 
@@ -130,7 +135,9 @@ const Breakdown = (props) => {
           </summary>
           <div className="more-details">
             <span>{expenseType}</span>
-            <span>{date}</span>
+            <span>
+              {month} {date}, {year}
+            </span>
           </div>
         </details>
       );

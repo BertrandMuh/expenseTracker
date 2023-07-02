@@ -190,14 +190,13 @@ app.get("/get/specific_expenses", async (req, res) => {
     type === "house" ? Category.GeneralExpense : Category.PersonalExpense;
 
   try {
-    console.log(user, type);
+    console.log(user, type, month);
 
     let response = await collection
       .find({
         user: user,
-        date: {
-          $gte: new Date(year, month, 1),
-          $lt: new Date(year, month + 1, 1),
+        $expr: {
+          $eq: [{ $month: "$date" }, month + 1],
         },
       })
       .populate("expenseType", "name")
@@ -208,9 +207,8 @@ app.get("/get/specific_expenses", async (req, res) => {
     //Get the count per period
     const totalCount = await collection.countDocuments({
       user: user,
-      date: {
-        $gte: new Date(year, month, 1),
-        $lt: new Date(year, month + 1, 1),
+      $expr: {
+        $eq: [{ $month: "$date" }, month + 1],
       },
     });
 
@@ -269,9 +267,8 @@ app.get("/get/sum_by_category", async (req, res) => {
       {
         $match: {
           user: new mongoose.Types.ObjectId(user),
-          date: {
-            $gte: new Date(year, month, 1),
-            $lt: new Date(year, month + 1, 1),
+          $expr: {
+            $eq: [{ $month: "$date" }, month + 1],
           },
         },
       },
@@ -309,9 +306,8 @@ app.get("/get/specific_personal_expenses", async (req, res) => {
   try {
     let response = await Category.PersonalExpense.find({
       user: user,
-      date: {
-        $gte: new Date(year, month, 1),
-        $lt: new Date(year, month + 1, 1),
+      $expr: {
+        $eq: [{ $month: "$date" }, month + 1],
       },
     })
       .populate("expenseType", "name")
@@ -322,9 +318,8 @@ app.get("/get/specific_personal_expenses", async (req, res) => {
     //Get the count per period
     const totalCount = await Category.PersonalExpense.countDocuments({
       user: user,
-      date: {
-        $gte: new Date(year, month, 1),
-        $lt: new Date(year, month + 1, 1),
+      $expr: {
+        $eq: [{ $month: "$date" }, month + 1],
       },
     });
 

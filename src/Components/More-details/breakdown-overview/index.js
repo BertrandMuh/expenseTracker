@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AppContext } from "../../../../context";
+import { AppContext } from "../../../context";
 import "./index.scss";
 
 const BreakdownSummary = (props) => {
@@ -17,7 +17,6 @@ const BreakdownSummary = (props) => {
       </div>
     );
   });
-  console.log(breakdownOverview.length);
   return (
     <div className="breakdown-overview ">
       <h2 className="title">Summary</h2>

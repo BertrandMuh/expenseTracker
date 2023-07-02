@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import "./index.scss";
 import { AppContext } from "../../context";
 import Welcome from "../../Components/Welcome-summary";
-import Breakdown from "../../Components/More-details/breakdownCharts/breakdown";
 import axios from "axios";
+import Breakdown from "../../Components/More-details/breakdown";
 
 const Home = () => {
   const { user, setExpense, setExpensePeriod, setBreakdownOverview } =
