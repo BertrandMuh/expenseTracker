@@ -245,7 +245,7 @@ const Breakdown = (props) => {
             hasNextPage={hasNextPage}
           />
         </div>
-        {breakdownOverview.length > 0 ? (
+        {breakdownOverview.length > 0 && breakdownOverview[0].totalSum ? (
           <div className="charts">
             <BreakdownSummary isHouseExpense={isHouseExpense} />
           </div>

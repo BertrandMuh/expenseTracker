@@ -5,9 +5,13 @@ import { Charts } from "../../Charts";
 
 const BreakdownSummary = (props) => {
   const { breakdownOverview } = useContext(AppContext);
-  // console.log(breakdownOverview[0].expenseByCategory);
-  const expenseByCategory = breakdownOverview[0].expenseByCategory;
-  const total = breakdownOverview[0].totalSum.totalAmount;
+  const expenseByCategory = breakdownOverview
+    ? breakdownOverview[0].expenseByCategory
+    : [];
+  const total = breakdownOverview[0].totalSum
+    ? breakdownOverview[0].totalSum.totalAmount
+    : 0;
+
   const overviewJSX = [...expenseByCategory].map((element, idx) => {
     const name = element.name.split("_").join(" ");
     const amount = element.totalAmount.toFixed(2);
