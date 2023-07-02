@@ -1,0 +1,49 @@
+.pie{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: max-content;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+
+
+    .legends-ctn{
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 50%;
+    
+
+        .legend{
+            display: flex;
+            gap:10px;
+            justify-content:space-between;
+            margin: 0;
+            min-width: max-content;
+           
+            .name,.ratio{
+                font-size: 18px;
+                display: flex;
+                justify-content: space-between;
+                font-weight: 500;
+            }
+            .color{
+                min-width: 20px;
+                height: 20px;
+            }
+        }
+        
+    }
+    .chart-div{
+        height: 300px;
+        width: 300px; 
+        max-width: 200px;
+        max-height: 200px;
+        margin-bottom: 20px;
+        width: 100%;
+        padding: 15px;
+        margin-left: 15px;
+    }
+}

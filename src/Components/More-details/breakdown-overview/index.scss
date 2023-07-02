@@ -1,5 +1,7 @@
 
 .breakdown-summary{
+
+   
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -7,7 +9,9 @@
     width: 100%;
     margin: auto;
 
-
+    .graph{
+        width: 100%;
+    }
     .breakdown-overview {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -17,7 +21,7 @@
         text-transform: capitalize;
         height: max-content;
         width: 100%;
-        padding: 10px 5px;
+        padding: 0 5px;
 
         .title {
             grid-column: 2 span;
