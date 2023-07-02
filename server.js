@@ -208,7 +208,10 @@ app.get("/get/specific_expenses", async (req, res) => {
     const totalCount = await collection.countDocuments({
       user: user,
       $expr: {
-        $eq: [{ $month: "$date" }, month + 1],
+        $and: [
+          { $eq: [{ $month: "$date" }, month + 1] },
+          { $eq: [{ $year: "$date" }, year] },
+        ],
       },
     });
 
@@ -247,88 +250,69 @@ app.get("/get/sum_by_category", async (req, res) => {
   try {
     const expenseSumByType = await Collection.aggregate([
       {
-        $lookup: {
-          from: RefCategogry, // Replace "expenseTypes" with the actual collection name containing expense types
-          localField: "expenseType", // field reference in the current collection
-          foreignField: "_id", // type of foreign field
-          as: "expenseTypeInfo", // They was to group it
-        },
-      },
-      {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [
-              { $arrayElemAt: ["$expenseTypeInfo", 0] },
-              "$$ROOT",
+        $match: {
+          user: new mongoose.Types.ObjectId(user),
+          $expr: {
+            $and: [
+              { $eq: [{ $month: "$date" }, month + 1] },
+              { $eq: [{ $year: "$date" }, year] },
             ],
           },
         },
       },
       {
-        $match: {
-          user: new mongoose.Types.ObjectId(user),
-          $expr: {
-            $eq: [{ $month: "$date" }, month + 1],
-          },
+        $facet: {
+          totalSum: [
+            {
+              $group: {
+                _id: null,
+                totalAmount: { $sum: "$amount" },
+              },
+            },
+          ],
+          expenseByCategory: [
+            {
+              $lookup: {
+                from: RefCategogry,
+                localField: "expenseType",
+                foreignField: "_id",
+                as: "expenseTypeInfo",
+              },
+            },
+            {
+              $replaceRoot: {
+                newRoot: {
+                  $mergeObjects: [
+                    { $arrayElemAt: ["$expenseTypeInfo", 0] },
+                    "$$ROOT",
+                  ],
+                },
+              },
+            },
+            {
+              $group: {
+                _id: "$expenseType",
+                name: { $first: "$name" },
+                totalAmount: { $sum: "$amount" },
+                data: { $push: "$$ROOT" },
+              },
+            },
+            {
+              $sort: {
+                totalAmount: -1,
+              },
+            },
+          ],
         },
       },
       {
-        // Group the items
-        $group: {
-          _id: "$expenseType",
-          name: { $first: "$name" },
-          totalAmount: { $sum: "$amount" },
-          data: { $push: "$$ROOT" },
-        },
-      },
-      {
-        $sort: {
-          totalAmount: -1,
+        $project: {
+          totalSum: { $arrayElemAt: ["$totalSum", 0] },
+          expenseByCategory: 1,
         },
       },
     ]);
     res.send(expenseSumByType);
-  } catch (error) {
-    console.error(error);
-    res.send(error);
-  }
-});
-
-app.get("/get/specific_personal_expenses", async (req, res) => {
-  const data = req.query;
-  const user = data.user;
-  const month = +data.month;
-  const year = +data.year;
-  const page = data.page ? data.page : 1;
-  const pageSize = 1;
-  const skipCount = pageSize * (page - 1);
-
-  try {
-    let response = await Category.PersonalExpense.find({
-      user: user,
-      $expr: {
-        $eq: [{ $month: "$date" }, month + 1],
-      },
-    })
-      .populate("expenseType", "name")
-      .sort({ date: -1 })
-      .skip(skipCount)
-      .limit(pageSize);
-
-    //Get the count per period
-    const totalCount = await Category.PersonalExpense.countDocuments({
-      user: user,
-      $expr: {
-        $eq: [{ $month: "$date" }, month + 1],
-      },
-    });
-
-    // Get the number of pages
-    const maxPageNumber = totalCount / pageSize;
-
-    const hasNextPage = page < maxPageNumber;
-
-    res.send({ response, maxPageNumber, hasNextPage });
   } catch (error) {
     console.error(error);
     res.send(error);

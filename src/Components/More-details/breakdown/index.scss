@@ -93,18 +93,20 @@
                         list-style: none;
                         p{
                             display: grid;
-                           grid-template-columns: 1fr 0.47fr;
+                           grid-template-columns: 1fr 0.5fr;
                             align-items: center;
                             font-size: 14px;
                             margin: 0;
                             flex-grow: 1;
 
                             .amount{
-                                display: grid;
-                                grid-template-columns: 0.1fr 1fr;
+                               display: flex;
+                               justify-content: flex-end;
+                               gap: 10px;
 
                                 .bi-currency-dollar{
                                     font-weight: 500;
+                                    // width: 50px;
                                 }
                                 :last-child{
                                     text-align: right;

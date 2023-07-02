@@ -113,9 +113,7 @@ const Breakdown = (props) => {
       // Convert the time
       const date = new Date(element.date).getUTCDate();
       const monthInteger = new Date(element.date).getUTCMonth();
-      console.log(monthInteger);
       const month = returnMonths()[+monthInteger];
-      console.log(month);
       const year = new Date(element.date).getUTCFullYear();
       // Set the amount to 2 decimal place
       const amount = element.amount.toFixed(2);
