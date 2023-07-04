@@ -14,6 +14,7 @@ const BreakdownSummary = (props) => {
 
   const overviewJSX = [...expenseByCategory].map((element, idx) => {
     const name = element.name.split("_").join(" ");
+    console.log(name);
     const amount = element.totalAmount.toFixed(2);
     return (
       <div key={idx}>

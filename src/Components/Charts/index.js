@@ -51,10 +51,11 @@ export function Charts() {
 
   const colors = categoryAmount.map(() => getRandomColor());
   const legends = categoryNames.map((element, index) => {
+    const name = element.split("_").join(" ");
     return (
       <p className="legend" key={index} style={{ color: colors[index] }}>
         <span className="color" style={{ background: colors[index] }}></span>
-        <span className="name">{element}</span>
+        <span className="name">{name}</span>
         <span className="ratio">{categoryAmount[index]} %</span>
       </p>
     );

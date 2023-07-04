@@ -10,6 +10,7 @@ import Expenses from "./pages/Expenses";
 import Login from "./Forms/Login";
 import Register from "./Forms/Register";
 import Footer from "./Components/Footer";
+import WelcomePage from "./pages/WelcomePage";
 
 function App() {
   document.cookie = `${document.cookie};SameSite=Lax`;
@@ -25,7 +26,7 @@ function App() {
         setUser(activeUser);
         navigate("/");
       } else {
-        navigate("/auth/login");
+        // navigate("/auth/login");
       }
     };
 
@@ -77,10 +78,14 @@ function App() {
           <Footer />
         </>
       ) : (
-        <Routes>
-          <Route path="/auth/login" element={<Login />} />
-          <Route path="/auth/register" element={<Register />} />
-        </Routes>
+        <div className="entry">
+          <Routes>
+            <Route path="/" element={<WelcomePage />} />
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/register" element={<Register />} />
+          </Routes>
+          <Footer />
+        </div>
       )}
     </div>
   );
