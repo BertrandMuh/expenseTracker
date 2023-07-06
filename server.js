@@ -319,6 +319,35 @@ app.get("/get/sum_by_category", async (req, res) => {
   }
 });
 
+app.get("/get/all_expenses", async (req, res) => {
+  const type = req.query.type;
+  const user = req.query.user;
+  const collection =
+    type === "house" ? Category.GeneralExpense : Category.PersonalExpense;
+  try {
+    let response = await collection.aggregate([
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(user),
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: {
+            $sum: "$amount",
+          },
+        },
+      },
+    ]);
+    console.log(response);
+    res.send(response);
+  } catch (error) {
+    console.error(error);
+    res.send(error);
+  }
+});
+
 app.post("/add/personal_expense", async (req, res) => {
   const expense = req.body.data;
   try {

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import "./index.scss";
 import { logout } from "../../usefull-functions/functions";
 import { AppContext } from "../../context";
-import Logo from "../../images/Money_Management_Logo_3.png";
+import Logo from "../../images/money-watch-logo.png";
 import { Link } from "react-router-dom";
 
 const Nav = () => {
@@ -48,7 +48,7 @@ const Nav = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/expenses">
-                Expenses
+                Add Expenses
               </Link>
             </li>
             {/* <li className="nav-item">

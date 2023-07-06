@@ -1,73 +1,76 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { AppContext } from "../../context";
 import "./index.scss";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// export
+export function Charts(props) {
+  const { expenseByCategory, total } = props;
+  console.log(expenseByCategory, total);
 
-export function Charts() {
-  const { breakdownOverview } = useContext(AppContext);
-  const categoryNames = breakdownOverview[0].expenseByCategory.map(
-    (element) => {
-      const name = element.name.replace(/\b\w/g, (match) =>
-        match.toUpperCase()
-      ); // Capitalize
-      return name;
-    }
-  );
-  const categoryAmount = breakdownOverview[0].expenseByCategory.map(
-    (element) => {
-      //   console.log(breakdownOverview[0]);
-      const percent =
-        (element.totalAmount / breakdownOverview[0].totalSum.totalAmount) * 100;
-      return percent.toFixed(1);
-    }
-  );
+  let category = expenseByCategory ? expenseByCategory : [];
+  const categoryNames = category.map((element) => {
+    const name = element.name.replace(/\b\w/g, (match) => match.toUpperCase()); // Capitalize
+    return name;
+  });
+  const categoryAmount = category.map((element) => {
+    //   console.log(breakdownOverview[0]);
+    const percent = (element.totalAmount / total) * 100;
+    return percent.toFixed(1);
+  });
 
-  const getRandomColor = () => {
-    const colorSet = new Set();
-
-    let isDuplicate = true;
-    let color;
-
-    while (isDuplicate) {
-      const r = Math.floor(Math.random() * 100); // Limit red value to 0-99
-      const g = Math.floor(Math.random() * 100); // Limit green value to 0-99
-      const b = Math.floor(Math.random() * 100); // Limit blue value to 0-99
-
-      color = `rgb(${r},${g},${b})`;
-
-      if (!colorSet.has(color)) {
-        isDuplicate = false;
-        colorSet.add(color);
+  const getRandomColor = (array) => {
+    const colors = [
+      "rgba(0,0,0,1)",
+      "rgba(150,0,0,1)",
+      "rgba(0,150,0,1)",
+      "rgba(0,0,150,1)",
+      "rgba(150,150,0,1)",
+      "rgba(0,150,150,1)",
+      "rgba(150,0,150,1)",
+      "rgba(150,150,150,1)",
+    ];
+    const missingColors = array.length - colors.length;
+    if (missingColors > 0) {
+      let r = 0;
+      let g = 0;
+      let b = 0;
+      let a = 1;
+      for (let i = 0; i < missingColors; i++) {
+        while (colors.includes(`rgba(${r},${g},${b},${a})`)) {
+          r = 100 + Math.floor(Math.random() * 100);
+          g = 100 + Math.floor(Math.random() * 100);
+          b = 100 + Math.floor(Math.random() * 100);
+          a = Math.random();
+        }
+        let color = `rgba(${r},${g},${b},${a})`;
+        colors.push(color);
       }
     }
 
-    return color;
+    return colors;
   };
 
-  const colors = categoryAmount.map(() => getRandomColor());
+  const colors = getRandomColor(categoryAmount);
+
   const legends = categoryNames.map((element, index) => {
     const name = element.split("_").join(" ");
     return (
-      <p className="legend" key={index} style={{ color: colors[index] }}>
+      <p className="legend" key={index}>
         <span className="color" style={{ background: colors[index] }}></span>
         <span className="name">{name}</span>
         <span className="ratio">{categoryAmount[index]} %</span>
       </p>
     );
   });
-  //   console.log(colors);
 
   const data = {
     datasets: [
       {
         data: categoryAmount,
         backgroundColor: colors,
-        borderColor: colors,
+        borderColor: "black",
         borderWidth: 1,
       },
     ],
@@ -76,6 +79,8 @@ export function Charts() {
   const chartOptions = {
     events: [],
   };
+
+  useEffect(() => {}, []);
 
   return (
     <div className="pie container-fluid">

@@ -14,7 +14,6 @@ const BreakdownSummary = (props) => {
 
   const overviewJSX = [...expenseByCategory].map((element, idx) => {
     const name = element.name.split("_").join(" ");
-    console.log(name);
     const amount = element.totalAmount.toFixed(2);
     return (
       <div key={idx}>
@@ -29,7 +28,7 @@ const BreakdownSummary = (props) => {
   return (
     <div className="breakdown-summary">
       <div className="graph">
-        <Charts expenseByCategory={expenseByCategory} />
+        <Charts expenseByCategory={expenseByCategory} total={total} />
       </div>
       <div className="breakdown-summary">
         <div className="breakdown-overview ">

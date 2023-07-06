@@ -82,7 +82,7 @@ const Home = () => {
         success story. Wishing you a prosperous and fulfilling financial
         journey!
       </p>
-      {/* <Welcome houseExpense={houseExpense} personalExpense={personalExpense} /> */}
+      <Welcome />
       <Breakdown
         getAllExpenses={getAllExpenses}
         getExpenses={getExpenses}
