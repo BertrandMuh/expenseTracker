@@ -1,4 +1,5 @@
-// import "./App.css";
+import "./App.css";
+import axios from "axios";
 
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
@@ -11,7 +12,6 @@ import Login from "./Forms/Login";
 import Register from "./Forms/Register";
 import Footer from "./Components/Footer";
 import WelcomePage from "./pages/WelcomePage";
-const axios = require("axios");
 
 function App() {
   // const axios = require("axios");
