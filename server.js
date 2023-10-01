@@ -55,7 +55,7 @@ app.use(
 );
 
 // server build folder
-app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static(path.join(__dirname, "../build")));
 
 app.get("/test_route", (req, res) => {
   res.send("good route!");
