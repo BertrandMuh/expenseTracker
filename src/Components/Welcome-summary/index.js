@@ -38,7 +38,6 @@ const Welcome = (props) => {
     getAllExpenses("house");
     getAllExpenses("personal");
     setTotal(houseExpense.totalAmount + personalExpense.totalAmount);
-    console.log(total);
   }, []);
 
   return (

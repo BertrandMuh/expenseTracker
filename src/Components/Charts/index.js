@@ -7,7 +7,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 export function Charts(props) {
   const { expenseByCategory, total } = props;
-  console.log(expenseByCategory, total);
 
   let category = expenseByCategory ? expenseByCategory : [];
   const categoryNames = category.map((element) => {
